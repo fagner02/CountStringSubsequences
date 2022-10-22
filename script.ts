@@ -1,14 +1,22 @@
 let highlight: HTMLElement = document.querySelector(".highlight")!;
 highlight.style.width = document.querySelector("p")!.offsetWidth + "px";
+
 let inputMain = <HTMLInputElement>document.querySelector("#main")!;
 inputMain.value = "annnan";
+
 let inputSub = <HTMLInputElement>document.querySelector("#sub")!;
 inputSub.value = "aanna";
+
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
 
+let cancelOp = false;
+let cancelOl = false;
+let runningOp = false;
+let runningOl = false;
+
 document.querySelectorAll("p").forEach((x) => {
-  x.addEventListener("click", () => {
+  x.addEventListener("click", async () => {
     highlight.style.left = x.offsetLeft + "px";
     highlight.style.width = x.offsetWidth + "px";
     let main = inputMain.value;
@@ -23,44 +31,73 @@ document.querySelectorAll("p").forEach((x) => {
       return;
     }
 
-    setOl(main, sub);
-    setOp(main, sub);
+    await setOp(main, sub);
+    await setOl(main, sub);
   });
 });
 
-function setOp(main: string, sub: string) {
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function cancelOlFunc() {
+  if (!runningOl) return;
+  cancelOl = true;
+}
+
+function cancelOpFunc() {
+  if (!runningOp) return;
+  cancelOp = true;
+}
+
+async function setOp(main: string, sub: string) {
   var asum = 0;
+  runningOp = true;
   for (let i = 0; i < 100; i++) {
+    if (cancelOp) {
+      cancelOp = false;
+      return;
+    }
+
     var start = performance.now();
+
     (<HTMLElement>resultsOp[1]).innerText =
-      "result: " + findSub(main, sub).toString();
+      "result: " + (await findSub(main, sub)).toString();
+
     var end = performance.now();
     asum += end - start;
+
     (<HTMLElement>resultsOp[0]).innerText = "batch item: " + i.toString();
+    await sleep(0);
   }
+  runningOp = false;
   (<HTMLElement>resultsOp[2]).innerText =
     "elapsed time: " + (asum / 100).toString().slice(0, 5);
 }
 
-function setOl(main: string, sub: string) {
+async function setOl(main: string, sub: string) {
   var asum = 0;
+  runningOl = true;
   for (let i = 0; i < 100; i++) {
+    if (cancelOl) {
+      cancelOl = false;
+      return;
+    }
     var start = performance.now();
+
     (<HTMLElement>resultsOl[1]).innerText =
-      "result: " + Count(main, sub, main.length, sub.length).toString();
+      "result: " + (await Count(main, sub, main.length, sub.length)).toString();
+
     var end = performance.now();
     asum += end - start;
     (<HTMLElement>resultsOl[0]).innerText = "batch item: " + i.toString();
+    await sleep(0);
   }
+  runningOl = false;
   (<HTMLElement>resultsOl[2]).innerText =
     "elapsed time:" + (asum / 100).toString().slice(0, 5);
 }
-/*
-   1  2 3
-g|1|2|3|4||||
-g|0|1|2|5||
-g|0|0|1|6||
-*/
+
 class repeatedValue {
   value: number = 0;
   n: number = 0;
@@ -102,7 +139,7 @@ function calcLowerRepeated(n: number): number {
   return n * calcLowerRepeated(n - 1);
 }
 
-function findSub(main: string, sub: string) {
+async function findSub(main: string, sub: string) {
   let subMap: Map<number, item> = new Map();
   let previous = null;
   let last = null;
@@ -176,26 +213,11 @@ function findSub(main: string, sub: string) {
   }
   return last!.getValue();
 }
-/*
-g g g g g
-g g g
-g g   g
-g g     g
-g   g g
-g   g   g
-g     g g
-  g g g
-  g g   g
-  g   g g
-    g g g
-    
-    'haminkjaannkjnannnaanaoimnanoinnnaaaakjnnaannan'
-    'anaaannana'
-*/
 
-function Count(a: any, b: any, m: any, n: any): any {
+async function Count(a: any, b: any, m: any, n: any): Promise<number> {
   // If both first and second string is empty,
   // or if second string is empty, return 1
+  if (cancelOl) return 0;
   if ((m == 0 && n == 0) || n == 0) return 1;
 
   // If only first string is empty and
@@ -209,7 +231,7 @@ function Count(a: any, b: any, m: any, n: any): any {
   // 2. ignoring last character of
   // first string
   if (a[m - 1] == b[n - 1])
-    return Count(a, b, m - 1, n - 1) + Count(a, b, m - 1, n);
+    return (await Count(a, b, m - 1, n - 1)) + (await Count(a, b, m - 1, n));
   // If last characters are different,
   // ignore last char of first string
   // and recur for remaining string

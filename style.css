@@ -98,3 +98,12 @@ input {
   gap: 5px;
   margin: 0 20px;
 }
+
+.title-box {
+  display: flex;
+  gap: 5px;
+}
+
+button:active {
+  transform: scale(0.9);
+}
