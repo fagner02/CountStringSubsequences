@@ -61,18 +61,20 @@ async function setOp(main: string, sub: string) {
 
     var start = performance.now();
 
-    (<HTMLElement>resultsOp[1]).innerText =
-      "result: " + (await findSub(main, sub)).toString();
+    (<HTMLElement>resultsOp[1]).innerText = `result: ${(
+      await findSub(main, sub)
+    ).toString()}`;
 
     var end = performance.now();
     asum += end - start;
 
-    (<HTMLElement>resultsOp[0]).innerText = "batch item: " + i.toString();
+    (<HTMLElement>resultsOp[0]).innerText = `batch item: ${i.toString()}`;
     await sleep(0);
   }
   runningOp = false;
-  (<HTMLElement>resultsOp[2]).innerText =
-    "elapsed time: " + (asum / 100).toString().slice(0, 5);
+  (<HTMLElement>resultsOp[2]).innerText = `elapsed time: ${(asum / 100)
+    .toString()
+    .slice(0, 5)}ms`;
 }
 
 async function setOl(main: string, sub: string) {
@@ -85,17 +87,19 @@ async function setOl(main: string, sub: string) {
     }
     var start = performance.now();
 
-    (<HTMLElement>resultsOl[1]).innerText =
-      "result: " + (await Count(main, sub, main.length, sub.length)).toString();
+    (<HTMLElement>resultsOl[1]).innerText = `result: ${(
+      await Count(main, sub, main.length, sub.length)
+    ).toString()}`;
 
     var end = performance.now();
     asum += end - start;
-    (<HTMLElement>resultsOl[0]).innerText = "batch item: " + i.toString();
+    (<HTMLElement>resultsOl[0]).innerText = `batch item: ${i.toString()}`;
     await sleep(0);
   }
   runningOl = false;
-  (<HTMLElement>resultsOl[2]).innerText =
-    "elapsed time:" + (asum / 100).toString().slice(0, 5);
+  (<HTMLElement>resultsOl[2]).innerText = `elapsed time:${(asum / 100)
+    .toString()
+    .slice(0, 5)}ms`;
 }
 
 class repeatedValue {

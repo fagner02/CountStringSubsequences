@@ -63,16 +63,16 @@ function setOp(main, sub) {
                 return;
             }
             var start = performance.now();
-            resultsOp[1].innerText =
-                "result: " + (yield findSub(main, sub)).toString();
+            resultsOp[1].innerText = `result: ${(yield findSub(main, sub)).toString()}`;
             var end = performance.now();
             asum += end - start;
-            resultsOp[0].innerText = "batch item: " + i.toString();
+            resultsOp[0].innerText = `batch item: ${i.toString()}`;
             yield sleep(0);
         }
         runningOp = false;
-        resultsOp[2].innerText =
-            "elapsed time: " + (asum / 100).toString().slice(0, 5);
+        resultsOp[2].innerText = `elapsed time: ${(asum / 100)
+            .toString()
+            .slice(0, 5)}ms`;
     });
 }
 function setOl(main, sub) {
@@ -85,16 +85,16 @@ function setOl(main, sub) {
                 return;
             }
             var start = performance.now();
-            resultsOl[1].innerText =
-                "result: " + (yield Count(main, sub, main.length, sub.length)).toString();
+            resultsOl[1].innerText = `result: ${(yield Count(main, sub, main.length, sub.length)).toString()}`;
             var end = performance.now();
             asum += end - start;
-            resultsOl[0].innerText = "batch item: " + i.toString();
+            resultsOl[0].innerText = `batch item: ${i.toString()}`;
             yield sleep(0);
         }
         runningOl = false;
-        resultsOl[2].innerText =
-            "elapsed time:" + (asum / 100).toString().slice(0, 5);
+        resultsOl[2].innerText = `elapsed time:${(asum / 100)
+            .toString()
+            .slice(0, 5)}ms`;
     });
 }
 class repeatedValue {
