@@ -15,7 +15,7 @@ let cancelOl = false;
 let runningOp = false;
 let runningOl = false;
 
-document.querySelectorAll("p").forEach((x) => {
+(<HTMLElement[]>(<any>document.querySelectorAll("p.option"))).forEach((x) => {
   x.addEventListener("click", async () => {
     highlight.style.left = x.offsetLeft + "px";
     highlight.style.width = x.offsetWidth + "px";
