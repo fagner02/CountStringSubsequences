@@ -7,6 +7,10 @@
 html,
 body {
   all: unset;
+  overflow: hidden;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
@@ -45,10 +49,13 @@ body {
   cursor: pointer;
 }
 
+.option {
+  color: white;
+}
+
 p {
   margin: 0;
   padding: 5px 10px;
-  color: white;
 }
 
 .border-box {
@@ -81,12 +88,6 @@ input {
   gap: 5px;
 }
 
-.text > div > p {
-  color: black;
-  margin: 0;
-  padding: 0;
-}
-
 .result-op > p,
 .result-ol > p {
   color: hsl(0, 0%, 20%);
@@ -115,23 +116,22 @@ button:active {
   flex-wrap: wrap;
   gap: 5px;
   margin: 0 20px;
-  align-items: flex-start;
+  align-content: flex-start;
 }
 
 .grid {
   display: grid;
   grid-template: 1fr / 1fr;
   grid-template-areas: "unit";
-}
-
-.content {
-  grid-area: unit;
+  overflow-y: auto;
 }
 
 .overlay {
   grid-area: unit;
 }
 
-.count-view > div > div > p {
-  color: hsl(0, 0%, 20%);
+.id-box {
+  background-color: hsl(0, 0%, 20%);
+  border-radius: 5px;
+  color: white;
 }

@@ -5,7 +5,7 @@ let inputMain = <HTMLInputElement>document.querySelector("#main")!;
 inputMain.value = "annnan";
 
 let inputSub = <HTMLInputElement>document.querySelector("#sub")!;
-inputSub.value = "aanna";
+inputSub.value = "a";
 
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
@@ -21,23 +21,34 @@ let runningOl = false;
     highlight.style.width = x.offsetWidth + "px";
     let main = inputMain.value;
     let sub = inputSub.value;
+
+    let resultBox = <HTMLElement>document.querySelector(".result-box");
+    let countView = <HTMLElement>document.querySelector(".count-view");
+
     if (x.innerText == "Old") {
+      resultBox.style.opacity = "1";
+      countView.style.opacity = "0";
       setOl(main, sub);
       return;
     }
 
     if (x.innerText == "Optimized") {
+      resultBox.style.opacity = "1";
+      countView.style.opacity = "0";
       setOp(main, sub);
       return;
     }
 
     if (x.innerText == "Both") {
+      resultBox.style.opacity = "1";
+      countView.style.opacity = "0";
       await setOp(main, sub);
       await setOl(main, sub);
     }
 
     if (x.innerText == "Visualize Old Code") {
-      (<HTMLElement>document.querySelector(".result-box")).style.opacity = "0";
+      resultBox.style.opacity = "0";
+      countView.style.opacity = "1";
       document.querySelector(".count-view")?.remove();
       var parent = document.createElement("div");
       parent.className = "count-view";
@@ -243,24 +254,27 @@ function addCountStep(step: string, value: number) {
   var parent = <HTMLElement>document.querySelector(".count-view");
   var content = document.createElement("div");
   var title = document.createElement("div");
-  var text = document.createElement("p");
+  var idText = document.createElement("p");
+  var mainStringText = document.createElement("p");
+  var subStringText = document.createElement("p");
+  var resultText = document.createElement("p");
 
-  content.className = "content";
-  content.className = "border-box";
+  content.className = "border-box content";
+  idText.className = "id-box";
 
-  text.innerText = "tgybu";
+  content.appendChild(idText);
+  content.appendChild(mainStringText);
+  content.appendChild(subStringText);
+  content.appendChild(resultText);
 
-  title.appendChild(text);
-  content.appendChild(title);
-  if (parent.firstChild == null) text.id = "s1";
+  if (parent.firstChild == null) content.id = "step: 1";
   else
-    text.id =
-      "s" +
-      (
-        parseInt(
-          (<HTMLElement>parent.firstChild.firstChild?.firstChild).id.slice(1)
-        ) + 1
-      ).toString();
+    content.id =
+      "step: " +
+      (parseInt((<HTMLElement>parent.firstChild).id.slice(6)) + 1).toString();
+
+  idText.innerText = content.id;
+
   parent.prepend(content);
 
   return content;
@@ -283,37 +297,62 @@ async function countStep(
 ): Promise<countStepResponse> {
   if (cancelOl) return new countStepResponse(0);
 
-  var content = <HTMLElement>(
-    addCountStep("countStep", 0).firstChild?.firstChild
-  );
+  var content = <HTMLElement>addCountStep("countStep", 0);
+
+  var idText = <HTMLElement>content.querySelectorAll("p")[0];
+  var mainStringText = <HTMLElement>content.querySelectorAll("p")[1];
+  var subStringText = <HTMLElement>content.querySelectorAll("p")[2];
+  var resultText = <HTMLElement>content.querySelectorAll("p")[3];
+
+  mainStringText.innerText = `main string: '${
+    a.slice(0, m).length < 1 ? " " : a.slice(0, m)
+  }'`;
+  subStringText.innerText = `sub string: '${
+    b.slice(0, n).length < 1 ? " " : b.slice(0, n)
+  }'`;
   await sleep(1000);
   if (n == 0) {
-    content.innerText = content.id + "\n1";
+    resultText.innerText = "result: 1";
     return new countStepResponse(1, content.id);
   }
 
   if (m == 0) {
-    content.innerText = content.id + "\n0";
+    resultText.innerText = "result: 0";
     return new countStepResponse(0, content.id);
   }
 
   if (a[m - 1] == b[n - 1]) {
-    content.innerText =
-      content.id +
-      `\nself(${a.slice(0, m - 1)},${b.slice(0, n - 1)},${m}-1, ${n}-1) + ` +
-      `self(${a.slice(0, m - 1)},${b.slice(0, n)}, ${m}-1, ${n})`;
+    let a1 = a.slice(0, m - 1);
+    a1 = a1.length < 1 ? " " : a1;
+    let b1 = b.slice(0, n);
+    b1 = b1.length < 1 ? " " : b1;
+    let b2 = a.slice(0, n);
+    b2 = b2.length < 1 ? " " : b2;
+
+    resultText.innerText =
+      `result: self('${a1}', '${b1}', ${m}-1, ${n}-1) + ` +
+      `self('${a1}', '${b2}', ${m}-1, ${n})`;
+
     let res1 = await countStep(a, b, m - 1, n - 1);
     let res2 = await countStep(a, b, m - 1, n);
     await sleep(1000);
-    content.innerText =
-      content.id + `\n${res1.id} + ${res2.id} = ${res1.value + res2.value}`;
+
+    resultText.innerText = `result: (${res1.id} + ${res2.id}) = ${
+      res1.value + res2.value
+    }`;
+
     return new countStepResponse(res1.value + res2.value, content.id);
   } else {
-    content.innerText =
-      content.id + `\nself(${a.slice(0, m - 1)},${b.slice(0, n)},${m}-1, ${n})`;
+    let a1 = a.slice(0, m - 1);
+    a1 = a1.length < 1 ? " " : a1;
+    let b1 = b.slice(0, n);
+    b1 = b1.length < 1 ? " " : b1;
+
+    resultText.innerText = `result: self('${a1}', '${b1}', ${m}-1, ${n})`;
+
     let res = await countStep(a, b, m - 1, n);
     await sleep(1000);
-    content.innerText = content.id + `\n${res.id} = ${res.value}`;
+    resultText.innerText = `result: (${res.id}) = ${res.value}`;
     return new countStepResponse(res.value, content.id);
   }
 }
