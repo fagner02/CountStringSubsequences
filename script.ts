@@ -31,8 +31,19 @@ let runningOl = false;
       return;
     }
 
-    await setOp(main, sub);
-    await setOl(main, sub);
+    if (x.innerText == "Both") {
+      await setOp(main, sub);
+      await setOl(main, sub);
+    }
+
+    if (x.innerText == "Visualize Old Code") {
+      (<HTMLElement>document.querySelector(".result-box")).style.opacity = "0";
+      document.querySelector(".count-view")?.remove();
+      var parent = document.createElement("div");
+      parent.className = "count-view";
+      document.querySelector("body>.grid")?.append(parent);
+      countStep(main, sub, main.length, sub.length);
+    }
   });
 });
 
@@ -88,7 +99,7 @@ async function setOl(main: string, sub: string) {
     var start = performance.now();
 
     (<HTMLElement>resultsOl[1]).innerText = `result: ${(
-      await Count(main, sub, main.length, sub.length)
+      await count(main, sub, main.length, sub.length)
     ).toString()}`;
 
     var end = performance.now();
@@ -176,8 +187,7 @@ async function findSub(main: string, sub: string) {
     subMap.set(index, previous);
     last = previous;
   }
-  // console.log(subMap);
-  // var lastRepeat = null;
+
   for (let i = 0; i < main.length; i++) {
     if (!subMap.has(main.charCodeAt(i))) {
       continue;
@@ -218,28 +228,92 @@ async function findSub(main: string, sub: string) {
   return last!.getValue();
 }
 
-async function Count(a: any, b: any, m: any, n: any): Promise<number> {
-  // If both first and second string is empty,
-  // or if second string is empty, return 1
+async function count(a: any, b: any, m: any, n: any): Promise<number> {
   if (cancelOl) return 0;
-  if ((m == 0 && n == 0) || n == 0) return 1;
+  if (n == 0) return 1;
 
-  // If only first string is empty and
-  // second string is not empty, return 0
   if (m == 0) return 0;
 
-  // If last characters are same
-  // Recur for remaining strings by
-  // 1. considering last characters of
-  // both strings
-  // 2. ignoring last character of
-  // first string
   if (a[m - 1] == b[n - 1])
-    return (await Count(a, b, m - 1, n - 1)) + (await Count(a, b, m - 1, n));
-  // If last characters are different,
-  // ignore last char of first string
-  // and recur for remaining string
-  else return Count(a, b, m - 1, n);
+    return (await count(a, b, m - 1, n - 1)) + (await count(a, b, m - 1, n));
+  else return count(a, b, m - 1, n);
 }
 
-// Driver code
+function addCountStep(step: string, value: number) {
+  var parent = <HTMLElement>document.querySelector(".count-view");
+  var content = document.createElement("div");
+  var title = document.createElement("div");
+  var text = document.createElement("p");
+
+  content.className = "content";
+  content.className = "border-box";
+
+  text.innerText = "tgybu";
+
+  title.appendChild(text);
+  content.appendChild(title);
+  if (parent.firstChild == null) text.id = "s1";
+  else
+    text.id =
+      "s" +
+      (
+        parseInt(
+          (<HTMLElement>parent.firstChild.firstChild?.firstChild).id.slice(1)
+        ) + 1
+      ).toString();
+  parent.prepend(content);
+
+  return content;
+}
+
+class countStepResponse {
+  value: number;
+  id: string | null;
+  constructor(value: number, id: string | null = null) {
+    this.value = value;
+    this.id = id;
+  }
+}
+
+async function countStep(
+  a: any,
+  b: any,
+  m: any,
+  n: any
+): Promise<countStepResponse> {
+  if (cancelOl) return new countStepResponse(0);
+
+  var content = <HTMLElement>(
+    addCountStep("countStep", 0).firstChild?.firstChild
+  );
+  await sleep(1000);
+  if (n == 0) {
+    content.innerText = content.id + "\n1";
+    return new countStepResponse(1, content.id);
+  }
+
+  if (m == 0) {
+    content.innerText = content.id + "\n0";
+    return new countStepResponse(0, content.id);
+  }
+
+  if (a[m - 1] == b[n - 1]) {
+    content.innerText =
+      content.id +
+      `\nself(${a.slice(0, m - 1)},${b.slice(0, n - 1)},${m}-1, ${n}-1) + ` +
+      `self(${a.slice(0, m - 1)},${b.slice(0, n)}, ${m}-1, ${n})`;
+    let res1 = await countStep(a, b, m - 1, n - 1);
+    let res2 = await countStep(a, b, m - 1, n);
+    await sleep(1000);
+    content.innerText =
+      content.id + `\n${res1.id} + ${res2.id} = ${res1.value + res2.value}`;
+    return new countStepResponse(res1.value + res2.value, content.id);
+  } else {
+    content.innerText =
+      content.id + `\nself(${a.slice(0, m - 1)},${b.slice(0, n)},${m}-1, ${n})`;
+    let res = await countStep(a, b, m - 1, n);
+    await sleep(1000);
+    content.innerText = content.id + `\n${res.id} = ${res.value}`;
+    return new countStepResponse(res.value, content.id);
+  }
+}

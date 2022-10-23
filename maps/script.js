@@ -22,6 +22,7 @@ let runningOp = false;
 let runningOl = false;
 document.querySelectorAll("p.option").forEach((x) => {
     x.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
         highlight.style.left = x.offsetLeft + "px";
         highlight.style.width = x.offsetWidth + "px";
         let main = inputMain.value;
@@ -34,8 +35,18 @@ document.querySelectorAll("p.option").forEach((x) => {
             setOp(main, sub);
             return;
         }
-        yield setOp(main, sub);
-        yield setOl(main, sub);
+        if (x.innerText == "Both") {
+            yield setOp(main, sub);
+            yield setOl(main, sub);
+        }
+        if (x.innerText == "Visualize Old Code") {
+            document.querySelector(".result-box").style.opacity = "0";
+            (_a = document.querySelector(".count-view")) === null || _a === void 0 ? void 0 : _a.remove();
+            var parent = document.createElement("div");
+            parent.className = "count-view";
+            (_b = document.querySelector("body>.grid")) === null || _b === void 0 ? void 0 : _b.append(parent);
+            countStep(main, sub, main.length, sub.length);
+        }
     }));
 });
 function sleep(ms) {
@@ -85,7 +96,7 @@ function setOl(main, sub) {
                 return;
             }
             var start = performance.now();
-            resultsOl[1].innerText = `result: ${(yield Count(main, sub, main.length, sub.length)).toString()}`;
+            resultsOl[1].innerText = `result: ${(yield count(main, sub, main.length, sub.length)).toString()}`;
             var end = performance.now();
             asum += end - start;
             resultsOl[0].innerText = `batch item: ${i.toString()}`;
@@ -163,8 +174,6 @@ function findSub(main, sub) {
             subMap.set(index, previous);
             last = previous;
         }
-        // console.log(subMap);
-        // var lastRepeat = null;
         for (let i = 0; i < main.length; i++) {
             if (!subMap.has(main.charCodeAt(i))) {
                 continue;
@@ -204,32 +213,81 @@ function findSub(main, sub) {
         return last.getValue();
     });
 }
-function Count(a, b, m, n) {
+function count(a, b, m, n) {
     return __awaiter(this, void 0, void 0, function* () {
-        // If both first and second string is empty,
-        // or if second string is empty, return 1
         if (cancelOl)
             return 0;
-        if ((m == 0 && n == 0) || n == 0)
+        if (n == 0)
             return 1;
-        // If only first string is empty and
-        // second string is not empty, return 0
         if (m == 0)
             return 0;
-        // If last characters are same
-        // Recur for remaining strings by
-        // 1. considering last characters of
-        // both strings
-        // 2. ignoring last character of
-        // first string
         if (a[m - 1] == b[n - 1])
-            return (yield Count(a, b, m - 1, n - 1)) + (yield Count(a, b, m - 1, n));
-        // If last characters are different,
-        // ignore last char of first string
-        // and recur for remaining string
+            return (yield count(a, b, m - 1, n - 1)) + (yield count(a, b, m - 1, n));
         else
-            return Count(a, b, m - 1, n);
+            return count(a, b, m - 1, n);
     });
 }
-// Driver code
+function addCountStep(step, value) {
+    var _a;
+    var parent = document.querySelector(".count-view");
+    var content = document.createElement("div");
+    var title = document.createElement("div");
+    var text = document.createElement("p");
+    content.className = "content";
+    content.className = "border-box";
+    text.innerText = "tgybu";
+    title.appendChild(text);
+    content.appendChild(title);
+    if (parent.firstChild == null)
+        text.id = "s1";
+    else
+        text.id =
+            "s" +
+                (parseInt(((_a = parent.firstChild.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild).id.slice(1)) + 1).toString();
+    parent.prepend(content);
+    return content;
+}
+class countStepResponse {
+    constructor(value, id = null) {
+        this.value = value;
+        this.id = id;
+    }
+}
+function countStep(a, b, m, n) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (cancelOl)
+            return new countStepResponse(0);
+        var content = ((_a = addCountStep("countStep", 0).firstChild) === null || _a === void 0 ? void 0 : _a.firstChild);
+        yield sleep(1000);
+        if (n == 0) {
+            content.innerText = content.id + "\n1";
+            return new countStepResponse(1, content.id);
+        }
+        if (m == 0) {
+            content.innerText = content.id + "\n0";
+            return new countStepResponse(0, content.id);
+        }
+        if (a[m - 1] == b[n - 1]) {
+            content.innerText =
+                content.id +
+                    `\nself(${a.slice(0, m - 1)},${b.slice(0, n - 1)},${m}-1, ${n}-1) + ` +
+                    `self(${a.slice(0, m - 1)},${b.slice(0, n)}, ${m}-1, ${n})`;
+            let res1 = yield countStep(a, b, m - 1, n - 1);
+            let res2 = yield countStep(a, b, m - 1, n);
+            yield sleep(1000);
+            content.innerText =
+                content.id + `\n${res1.id} + ${res2.id} = ${res1.value + res2.value}`;
+            return new countStepResponse(res1.value + res2.value, content.id);
+        }
+        else {
+            content.innerText =
+                content.id + `\nself(${a.slice(0, m - 1)},${b.slice(0, n)},${m}-1, ${n})`;
+            let res = yield countStep(a, b, m - 1, n);
+            yield sleep(1000);
+            content.innerText = content.id + `\n${res.id} = ${res.value}`;
+            return new countStepResponse(res.value, content.id);
+        }
+    });
+}
 //# sourceMappingURL=script.js.map

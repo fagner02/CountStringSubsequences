@@ -97,6 +97,7 @@ input {
   flex-wrap: wrap;
   gap: 5px;
   margin: 0 20px;
+  grid-area: unit;
 }
 
 .title-box {
@@ -106,4 +107,31 @@ input {
 
 button:active {
   transform: scale(0.9);
+}
+
+.count-view {
+  grid-area: unit;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0 20px;
+  align-items: flex-start;
+}
+
+.grid {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  grid-template-areas: "unit";
+}
+
+.content {
+  grid-area: unit;
+}
+
+.overlay {
+  grid-area: unit;
+}
+
+.count-view > div > div > p {
+  color: hsl(0, 0%, 20%);
 }
