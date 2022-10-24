@@ -95,7 +95,6 @@ input {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  height: fit-content;
 }
 
 .text > div {
@@ -119,6 +118,7 @@ input {
   gap: 5px;
   margin: 0 20px;
   grid-area: unit;
+  height: fit-content;
 }
 
 .title-box {
