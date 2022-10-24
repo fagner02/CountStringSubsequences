@@ -1,5 +1,7 @@
 let highlight: HTMLElement = document.querySelector(".highlight")!;
 highlight.style.width = document.querySelector("p")!.offsetWidth + "px";
+highlight.style.height = document.querySelector("p")!.offsetHeight + "px";
+highlight.style.left = document.querySelector("p")!.offsetLeft + "px";
 
 let inputMain = <HTMLInputElement>document.querySelector("#main")!;
 inputMain.value = "annnan";
@@ -21,7 +23,9 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
 (<HTMLElement[]>(<any>document.querySelectorAll("p.option"))).forEach((x) => {
   x.addEventListener("click", async () => {
     highlight.style.left = x.offsetLeft + "px";
+    highlight.style.top = x.offsetTop + "px";
     highlight.style.width = x.offsetWidth + "px";
+    highlight.style.height = x.offsetHeight + "px";
     let main = inputMain.value;
     let sub = inputSub.value;
 

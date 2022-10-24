@@ -47,6 +47,7 @@ body {
   grid-area: unit;
   justify-content: center;
   cursor: pointer;
+  flex-wrap: wrap;
 }
 
 .option {
@@ -94,6 +95,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  height: fit-content;
 }
 
 .text > div {

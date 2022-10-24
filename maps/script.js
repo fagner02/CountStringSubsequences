@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 let highlight = document.querySelector(".highlight");
 highlight.style.width = document.querySelector("p").offsetWidth + "px";
+highlight.style.height = document.querySelector("p").offsetHeight + "px";
+highlight.style.left = document.querySelector("p").offsetLeft + "px";
 let inputMain = document.querySelector("#main");
 inputMain.value = "annnan";
 let inputSub = document.querySelector("#sub");
@@ -27,7 +29,9 @@ document.querySelectorAll("p.option").forEach((x) => {
     x.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
         var _a, _b;
         highlight.style.left = x.offsetLeft + "px";
+        highlight.style.top = x.offsetTop + "px";
         highlight.style.width = x.offsetWidth + "px";
+        highlight.style.height = x.offsetHeight + "px";
         let main = inputMain.value;
         let sub = inputSub.value;
         let resultBox = document.querySelector(".result-box");
@@ -72,7 +76,6 @@ document.querySelectorAll("p.option").forEach((x) => {
                 (_b = timeout.get("showView")) === null || _b === void 0 ? void 0 : _b.push(setTimeout(() => {
                     showView(resultBox, countView, main, sub);
                 }, 1000));
-                // showView(resultBox, countView, main, sub);
                 return;
             }
             showView(resultBox, countView, main, sub);
