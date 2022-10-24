@@ -271,15 +271,15 @@ function addCountStep(step: string, value: number) {
   content.appendChild(subStringText);
   content.appendChild(resultText);
 
-  if (parent.firstChild == null) content.id = "step: 1";
+  if (parent.lastChild == null) content.id = "step: 1";
   else
     content.id =
       "step: " +
-      (parseInt((<HTMLElement>parent.firstChild).id.slice(6)) + 1).toString();
+      (parseInt((<HTMLElement>parent.lastChild).id.slice(6)) + 1).toString();
 
   idText.innerText = content.id;
 
-  parent.prepend(content);
+  parent.append(content);
 
   return content;
 }

@@ -254,14 +254,14 @@ function addCountStep(step, value) {
     content.appendChild(mainStringText);
     content.appendChild(subStringText);
     content.appendChild(resultText);
-    if (parent.firstChild == null)
+    if (parent.lastChild == null)
         content.id = "step: 1";
     else
         content.id =
             "step: " +
-                (parseInt(parent.firstChild.id.slice(6)) + 1).toString();
+                (parseInt(parent.lastChild.id.slice(6)) + 1).toString();
     idText.innerText = content.id;
-    parent.prepend(content);
+    parent.append(content);
     return content;
 }
 class countStepResponse {
