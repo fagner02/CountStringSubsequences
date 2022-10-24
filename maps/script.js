@@ -31,24 +31,28 @@ document.querySelectorAll("p.option").forEach((x) => {
         let countView = document.querySelector(".count-view");
         if (x.innerText == "Old") {
             resultBox.style.opacity = "1";
+            resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
             setOl(main, sub);
             return;
         }
         if (x.innerText == "Optimized") {
             resultBox.style.opacity = "1";
+            resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
             setOp(main, sub);
             return;
         }
         if (x.innerText == "Both") {
             resultBox.style.opacity = "1";
+            resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
             yield setOp(main, sub);
             yield setOl(main, sub);
         }
         if (x.innerText == "Visualize Old Code") {
             resultBox.style.opacity = "0";
+            resultBox.style.zIndex = "-1";
             countView.style.opacity = "1";
             (_a = document.querySelector(".count-view")) === null || _a === void 0 ? void 0 : _a.remove();
             var parent = document.createElement("div");

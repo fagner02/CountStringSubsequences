@@ -27,6 +27,7 @@ let runningOl = false;
 
     if (x.innerText == "Old") {
       resultBox.style.opacity = "1";
+      resultBox.style.zIndex = "1";
       countView.style.opacity = "0";
       setOl(main, sub);
       return;
@@ -34,6 +35,7 @@ let runningOl = false;
 
     if (x.innerText == "Optimized") {
       resultBox.style.opacity = "1";
+      resultBox.style.zIndex = "1";
       countView.style.opacity = "0";
       setOp(main, sub);
       return;
@@ -41,6 +43,7 @@ let runningOl = false;
 
     if (x.innerText == "Both") {
       resultBox.style.opacity = "1";
+      resultBox.style.zIndex = "1";
       countView.style.opacity = "0";
       await setOp(main, sub);
       await setOl(main, sub);
@@ -48,6 +51,7 @@ let runningOl = false;
 
     if (x.innerText == "Visualize Old Code") {
       resultBox.style.opacity = "0";
+      resultBox.style.zIndex = "-1";
       countView.style.opacity = "1";
       document.querySelector(".count-view")?.remove();
       var parent = document.createElement("div");
