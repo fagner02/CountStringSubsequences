@@ -44,14 +44,26 @@ function countStep(a, b, m, n) {
             throw new Error("cancelled");
         }
         var content = addCountStep("countStep", 0);
+        var idText = content.querySelector(".id-box");
         var mainStringText = content.querySelectorAll("p")[1];
         var subStringText = content.querySelectorAll("p")[2];
         var resultText = content.querySelectorAll("p")[3];
-        mainStringText.innerText = `main string: '${a.slice(0, m).length < 1 ? " " : a.slice(0, m)}'`;
-        subStringText.innerText = `sub string: '${b.slice(0, n).length < 1 ? " " : b.slice(0, n)}'`;
+        mainStringText.innerText = `main string: '${a.slice(0, m).length < 1 ? " " : a.slice(0, m - 1)}`;
+        let mainLast = a.slice(m - 1, m);
+        let mainLastText = document.createElement("b");
+        mainLastText.innerText = mainLast;
+        mainStringText.appendChild(mainLastText);
+        mainStringText.insertAdjacentText("beforeend", "'");
+        subStringText.innerText = `sub string: '${b.slice(0, n).length < 1 ? " " : b.slice(0, n - 1)}`;
+        let subLast = b.slice(n - 1, n);
+        let subLastText = document.createElement("b");
+        subLastText.innerText = subLast;
+        subStringText.appendChild(subLastText);
+        subStringText.insertAdjacentText("beforeend", "'");
         yield sleep(1000, "countStep");
         if (n == 0) {
             resultText.innerText = "result: 1";
+            idText.style.backgroundColor = "hsl(113, 65%, 45%)";
             return new countStepResponse(1, content.id);
         }
         if (m == 0) {

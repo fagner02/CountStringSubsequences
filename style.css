@@ -1,7 +1,7 @@
 * {
-  font-family: "Roboto";
-  font-weight: lighter;
-  font-size: 1.2rem;
+  font-family: "Roboto Mono";
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 html,
@@ -155,4 +155,8 @@ button:active {
   background-color: hsl(0, 0%, 20%);
   border-radius: 5px;
   color: white;
+}
+
+b {
+  font-weight: 600;
 }

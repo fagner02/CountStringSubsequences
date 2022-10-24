@@ -66,7 +66,7 @@ document.querySelectorAll("p.option").forEach((x) => {
             yield setOp(main, sub);
             yield setOl(main, sub);
         }
-        if (x.innerText == "Visualize Old Code") {
+        if (x.innerText == "Visualize-Old-Code") {
             if (runningOlView) {
                 (_a = timeout.get("showView")) === null || _a === void 0 ? void 0 : _a.forEach((x) => window.clearTimeout(x));
                 cancelOlView = true;

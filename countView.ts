@@ -48,20 +48,37 @@ async function countStep(
   }
 
   var content = <HTMLElement>addCountStep("countStep", 0);
-
+  var idText = <HTMLElement>content.querySelector(".id-box");
   var mainStringText = <HTMLElement>content.querySelectorAll("p")[1];
   var subStringText = <HTMLElement>content.querySelectorAll("p")[2];
   var resultText = <HTMLElement>content.querySelectorAll("p")[3];
 
   mainStringText.innerText = `main string: '${
-    a.slice(0, m).length < 1 ? " " : a.slice(0, m)
-  }'`;
+    a.slice(0, m).length < 1 ? " " : a.slice(0, m - 1)
+  }`;
+
+  let mainLast = a.slice(m - 1, m);
+  let mainLastText = document.createElement("b");
+
+  mainLastText.innerText = mainLast;
+  mainStringText.appendChild(mainLastText);
+  mainStringText.insertAdjacentText("beforeend", "'");
+
   subStringText.innerText = `sub string: '${
-    b.slice(0, n).length < 1 ? " " : b.slice(0, n)
-  }'`;
+    b.slice(0, n).length < 1 ? " " : b.slice(0, n - 1)
+  }`;
+
+  let subLast = b.slice(n - 1, n);
+  let subLastText = document.createElement("b");
+
+  subLastText.innerText = subLast;
+  subStringText.appendChild(subLastText);
+  subStringText.insertAdjacentText("beforeend", "'");
+
   await sleep(1000, "countStep");
   if (n == 0) {
     resultText.innerText = "result: 1";
+    idText.style.backgroundColor = "hsl(113, 65%, 45%)";
     return new countStepResponse(1, content.id);
   }
 

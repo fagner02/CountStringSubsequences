@@ -65,7 +65,7 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
       await setOl(main, sub);
     }
 
-    if (x.innerText == "Visualize Old Code") {
+    if (x.innerText == "Visualize-Old-Code") {
       if (runningOlView) {
         timeout.get("showView")?.forEach((x) => window.clearTimeout(x));
         cancelOlView = true;
