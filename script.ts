@@ -95,10 +95,14 @@ async function setOp(main: string, sub: string) {
     asum += end - start;
 
     (<HTMLElement>resultsOp[0]).innerText = `batch item: ${i.toString()}`;
+
+    (<HTMLElement>resultsOp[2]).innerText = `average timing: ${(asum / 100)
+      .toString()
+      .slice(0, 5)}ms`;
     await sleep(0);
   }
   runningOp = false;
-  (<HTMLElement>resultsOp[2]).innerText = `elapsed time: ${(asum / 100)
+  (<HTMLElement>resultsOp[2]).innerText = `average timing: ${(asum / 100)
     .toString()
     .slice(0, 5)}ms`;
 }
@@ -120,10 +124,13 @@ async function setOl(main: string, sub: string) {
     var end = performance.now();
     asum += end - start;
     (<HTMLElement>resultsOl[0]).innerText = `batch item: ${i.toString()}`;
+    (<HTMLElement>resultsOl[2]).innerText = `average timing:${(asum / 100)
+      .toString()
+      .slice(0, 5)}ms`;
     await sleep(0);
   }
   runningOl = false;
-  (<HTMLElement>resultsOl[2]).innerText = `elapsed time:${(asum / 100)
+  (<HTMLElement>resultsOl[2]).innerText = `average timing:${(asum / 100)
     .toString()
     .slice(0, 5)}ms`;
 }

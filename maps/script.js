@@ -91,10 +91,13 @@ function setOp(main, sub) {
             var end = performance.now();
             asum += end - start;
             resultsOp[0].innerText = `batch item: ${i.toString()}`;
+            resultsOp[2].innerText = `average timing: ${(asum / 100)
+                .toString()
+                .slice(0, 5)}ms`;
             yield sleep(0);
         }
         runningOp = false;
-        resultsOp[2].innerText = `elapsed time: ${(asum / 100)
+        resultsOp[2].innerText = `average timing: ${(asum / 100)
             .toString()
             .slice(0, 5)}ms`;
     });
@@ -113,10 +116,13 @@ function setOl(main, sub) {
             var end = performance.now();
             asum += end - start;
             resultsOl[0].innerText = `batch item: ${i.toString()}`;
+            resultsOl[2].innerText = `average timing:${(asum / 100)
+                .toString()
+                .slice(0, 5)}ms`;
             yield sleep(0);
         }
         runningOl = false;
-        resultsOl[2].innerText = `elapsed time:${(asum / 100)
+        resultsOl[2].innerText = `average timing:${(asum / 100)
             .toString()
             .slice(0, 5)}ms`;
     });
