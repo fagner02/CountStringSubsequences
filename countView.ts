@@ -28,6 +28,18 @@ function addCountStep(step: string, value: number) {
   return content;
 }
 
+function resetCountRecursiveView(main: string, sub: string) {
+  stack = [];
+  idCount = 1;
+  mainStringRecursiveView = main;
+  subStringRecursiveView = sub;
+
+  stack.push(new stackCall(idCount, main.length, sub.length, null));
+}
+
+let mainStringRecursiveView: string;
+let subStringRecursiveView: string;
+
 class countStepResponse {
   value: number;
   id: string | null;
@@ -37,14 +49,34 @@ class countStepResponse {
   }
 }
 
-async function countStep(
-  a: any,
-  b: any,
-  m: any,
-  n: any
-): Promise<countStepResponse> {
-  if (cancelOlView) {
-    throw new Error("cancelled");
+class stackCall {
+  id: number;
+  m: number;
+  n: number;
+  parent: number | null;
+  result: number[] = [];
+
+  constructor(id: number, m: number, n: number, parent: number | null = null) {
+    this.id = id;
+    this.m = m;
+    this.n = n;
+    this.parent = parent;
+  }
+}
+let idCount = 1;
+let stack: stackCall[] = [];
+
+function countRecursiveView() {
+  let current = stack[stack.length - 1];
+
+  if (current.result.length > 0 && current.result.every((x) => x > -1)) {
+    var parent = document.querySelector(`#step: ${stack[current.parent!].id}`);
+    var oldResultText = parent?.querySelectorAll("p")[3].innerText;
+    var first = oldResultText?.slice(0, oldResultText.indexOf(")"));
+    var second = oldResultText?.slice(
+      oldResultText.indexOf("+"),
+      oldResultText.length
+    );
   }
 
   var content = <HTMLElement>addCountStep("countStep", 0);
@@ -53,72 +85,55 @@ async function countStep(
   var subStringText = <HTMLElement>content.querySelectorAll("p")[2];
   var resultText = <HTMLElement>content.querySelectorAll("p")[3];
 
+  // Set the main string
   mainStringText.innerText = `main string: '${
-    a.slice(0, m).length < 1 ? " " : a.slice(0, m - 1)
+    mainStringRecursiveView.slice(0, current.m).length < 1
+      ? " "
+      : mainStringRecursiveView.slice(0, current.m - 1)
   }`;
 
-  let mainLast = a.slice(m - 1, m);
+  let mainLast = mainStringRecursiveView.slice(current.m - 1, current.m);
   let mainLastText = document.createElement("b");
 
   mainLastText.innerText = mainLast;
   mainStringText.appendChild(mainLastText);
   mainStringText.insertAdjacentText("beforeend", "'");
 
-  subStringText.innerText = `sub string: '${
-    b.slice(0, n).length < 1 ? " " : b.slice(0, n - 1)
+  // Set the sub string
+  subStringText.innerText = `main string: '${
+    subStringRecursiveView.slice(0, current.n).length < 1
+      ? " "
+      : subStringRecursiveView.slice(0, current.n - 1)
   }`;
 
-  let subLast = b.slice(n - 1, n);
+  let subLast = subStringRecursiveView.slice(current.n - 1, current.n);
   let subLastText = document.createElement("b");
 
   subLastText.innerText = subLast;
   subStringText.appendChild(subLastText);
   subStringText.insertAdjacentText("beforeend", "'");
 
-  await sleep(1000, "countStep");
-  if (n == 0) {
-    resultText.innerText = "result: 1";
-    idText.style.backgroundColor = "hsl(113, 65%, 45%)";
-    return new countStepResponse(1, content.id);
+  if (current.n == 0) {
+    current.result.push(1);
+    return;
+  }
+  if (current.m == 0) {
+    current.result.push(0);
+    return;
   }
 
-  if (m == 0) {
-    resultText.innerText = "result: 0";
-    return new countStepResponse(0, content.id);
-  }
-
-  if (a[m - 1] == b[n - 1]) {
-    let a1 = a.slice(0, m - 1);
-    a1 = a1.length < 1 ? " " : a1;
-    let b1 = b.slice(0, n);
-    b1 = b1.length < 1 ? " " : b1;
-    let b2 = a.slice(0, n);
-    b2 = b2.length < 1 ? " " : b2;
-
-    resultText.innerText =
-      `result: self('${a1}', '${b1}', ${m}-1, ${n}-1) + ` +
-      `self('${a1}', '${b2}', ${m}-1, ${n})`;
-
-    let res1 = await countStep(a, b, m - 1, n - 1);
-    let res2 = await countStep(a, b, m - 1, n);
-    await sleep(1000, "countStep");
-
-    resultText.innerText = `result: (${res1.id} + ${res2.id}) = ${
-      res1.value + res2.value
-    }`;
-
-    return new countStepResponse(res1.value + res2.value, content.id);
+  if (
+    mainStringRecursiveView[current.m - 1] ==
+    subStringRecursiveView[current.n - 1]
+  ) {
+    idCount++;
+    stack.push(new stackCall(idCount, current.m - 1, current.n));
+    idCount++;
+    current.result = [-1, -1];
+    stack.push(new stackCall(idCount, current.m - 1, current.n - 1));
   } else {
-    let a1 = a.slice(0, m - 1);
-    a1 = a1.length < 1 ? " " : a1;
-    let b1 = b.slice(0, n);
-    b1 = b1.length < 1 ? " " : b1;
-
-    resultText.innerText = `result: self('${a1}', '${b1}', ${m}-1, ${n})`;
-
-    let res = await countStep(a, b, m - 1, n);
-    await sleep(1000, "countStep");
-    resultText.innerText = `result: (${res.id}) = ${res.value}`;
-    return new countStepResponse(res.value, content.id);
+    idCount++;
+    stack.push(new stackCall(idCount, current.m - 1, current.n));
+    current.result = [-1];
   }
 }

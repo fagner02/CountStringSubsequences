@@ -9,99 +9,106 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 let highlight = document.querySelector(".highlight");
-highlight.style.width = document.querySelector("p").offsetWidth + "px";
-highlight.style.height = document.querySelector("p").offsetHeight + "px";
-highlight.style.left = document.querySelector("p").offsetLeft + "px";
+let highlightSelected = document.querySelector("p");
+function setHighlight() {
+    highlight.style.opacity = "1";
+    highlight.style.top = highlightSelected.offsetTop + "px";
+    highlight.style.width = highlightSelected.offsetWidth + "px";
+    highlight.style.height = highlightSelected.offsetHeight + "px";
+    highlight.style.left = highlightSelected.offsetLeft + "px";
+    var infoboxes = document.querySelectorAll(".map-items>div>div");
+    infoboxes.forEach((infobox) => {
+        if (infobox.scrollHeight > infobox.clientHeight) {
+            infobox.style.paddingRight = "5px";
+        }
+        else {
+            infobox.style.paddingRight = "0px";
+        }
+    });
+}
+setTimeout(setHighlight, 100);
+window.addEventListener("resize", setHighlight);
 let inputMain = document.querySelector("#main");
-inputMain.value = "annnan";
+inputMain.value = "aananananana";
 let inputSub = document.querySelector("#sub");
-inputSub.value = "a";
+inputSub.value = "aann";
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
 let cancelOp = false;
 let cancelOl = false;
 let runningOp = false;
 let runningOl = false;
-let cancelOlView = false;
-let runningOlView = false;
 let timeout = new Map([["countStep", []]]);
 document.querySelectorAll("p.option").forEach((x) => {
     x.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b;
-        highlight.style.left = x.offsetLeft + "px";
-        highlight.style.top = x.offsetTop + "px";
-        highlight.style.width = x.offsetWidth + "px";
-        highlight.style.height = x.offsetHeight + "px";
+        highlightSelected = x;
+        setHighlight();
         let main = inputMain.value;
         let sub = inputSub.value;
         let resultBox = document.querySelector(".result-box");
         let countView = document.querySelector(".count-view");
+        let findView = document.querySelector(".find-view");
         if (x.innerText == "Old") {
-            if (runningOlView) {
-                cancelOlView = true;
-            }
+            resetCountRecursiveView("", "");
+            resetView();
             resultBox.style.opacity = "1";
             resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
+            findView.style.opacity = "0";
             setOl(main, sub);
             return;
         }
         if (x.innerText == "Optimized") {
-            if (runningOlView) {
-                cancelOlView = true;
-            }
+            resetCountRecursiveView("", "");
+            resetView();
             resultBox.style.opacity = "1";
             resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
+            findView.style.opacity = "0";
             setOp(main, sub);
             return;
         }
         if (x.innerText == "Both") {
-            if (runningOlView) {
-                cancelOlView = true;
-            }
+            resetCountRecursiveView("", "");
+            resetView();
             resultBox.style.opacity = "1";
             resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
+            findView.style.opacity = "0";
             yield setOp(main, sub);
             yield setOl(main, sub);
         }
         if (x.innerText == "Visualize-Old-Code") {
-            if (runningOlView) {
-                (_a = timeout.get("showView")) === null || _a === void 0 ? void 0 : _a.forEach((x) => window.clearTimeout(x));
-                cancelOlView = true;
-                if (!timeout.has("showView")) {
-                    timeout.set("showView", []);
-                }
-                (_b = timeout.get("showView")) === null || _b === void 0 ? void 0 : _b.push(setTimeout(() => {
-                    showView(resultBox, countView, main, sub);
-                }, 1000));
-                return;
-            }
-            showView(resultBox, countView, main, sub);
+            findView.style.opacity = "0";
+            findView.style.zIndex = "-1";
+            resultBox.style.opacity = "0";
+            resultBox.style.zIndex = "-1";
+            countView.style.opacity = "1";
+            resetView();
+            showView(main, sub);
+        }
+        if (x.innerText == "Visualize-Optimized-Code") {
+            resultBox.style.opacity = "0";
+            resultBox.style.zIndex = "-1";
+            countView.style.opacity = "0";
+            countView.style.zIndex = "-1";
+            findView.style.opacity = "1";
+            findView.style.zIndex = "1";
+            resetCountRecursiveView("", "");
+            resetView();
+            findSubView(main, sub);
         }
     }));
 });
-function showView(resultBox, countView, main, sub) {
+function showView(main, sub) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        resultBox.style.opacity = "0";
-        resultBox.style.zIndex = "-1";
-        countView.style.opacity = "1";
-        (_a = document.querySelector(".count-view")) === null || _a === void 0 ? void 0 : _a.remove();
+        (_a = document.querySelector(".count-view>.recursive-tree")) === null || _a === void 0 ? void 0 : _a.remove();
         var parent = document.createElement("div");
-        parent.className = "count-view";
-        (_b = document.querySelector("body>.grid")) === null || _b === void 0 ? void 0 : _b.append(parent);
-        try {
-            runningOlView = true;
-            yield countStep(main, sub, main.length, sub.length);
-            runningOlView = false;
-        }
-        catch (_c) {
-            cancelOlView = false;
-            runningOlView = false;
-            timeout.get("countStep").forEach((x) => window.clearTimeout(x));
-        }
+        parent.className = "recursive-tree";
+        (_b = document.querySelector("body>.grid>.count-view")) === null || _b === void 0 ? void 0 : _b.append(parent);
+        resetCountRecursiveView(main, sub);
+        countRecursiveView();
     });
 }
 function sleep(ms, group) {

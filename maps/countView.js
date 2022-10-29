@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 function addCountStep(step, value) {
     var parent = document.querySelector(".count-view");
     var content = document.createElement("div");
@@ -32,71 +23,83 @@ function addCountStep(step, value) {
     parent.append(content);
     return content;
 }
+function resetCountRecursiveView(main, sub) {
+    stack = [];
+    idCount = 1;
+    mainStringRecursiveView = main;
+    subStringRecursiveView = sub;
+    stack.push(new stackCall(idCount, main.length, sub.length, null));
+}
+let mainStringRecursiveView;
+let subStringRecursiveView;
 class countStepResponse {
     constructor(value, id = null) {
         this.value = value;
         this.id = id;
     }
 }
-function countStep(a, b, m, n) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (cancelOlView) {
-            throw new Error("cancelled");
-        }
-        var content = addCountStep("countStep", 0);
-        var idText = content.querySelector(".id-box");
-        var mainStringText = content.querySelectorAll("p")[1];
-        var subStringText = content.querySelectorAll("p")[2];
-        var resultText = content.querySelectorAll("p")[3];
-        mainStringText.innerText = `main string: '${a.slice(0, m).length < 1 ? " " : a.slice(0, m - 1)}`;
-        let mainLast = a.slice(m - 1, m);
-        let mainLastText = document.createElement("b");
-        mainLastText.innerText = mainLast;
-        mainStringText.appendChild(mainLastText);
-        mainStringText.insertAdjacentText("beforeend", "'");
-        subStringText.innerText = `sub string: '${b.slice(0, n).length < 1 ? " " : b.slice(0, n - 1)}`;
-        let subLast = b.slice(n - 1, n);
-        let subLastText = document.createElement("b");
-        subLastText.innerText = subLast;
-        subStringText.appendChild(subLastText);
-        subStringText.insertAdjacentText("beforeend", "'");
-        yield sleep(1000, "countStep");
-        if (n == 0) {
-            resultText.innerText = "result: 1";
-            idText.style.backgroundColor = "hsl(113, 65%, 45%)";
-            return new countStepResponse(1, content.id);
-        }
-        if (m == 0) {
-            resultText.innerText = "result: 0";
-            return new countStepResponse(0, content.id);
-        }
-        if (a[m - 1] == b[n - 1]) {
-            let a1 = a.slice(0, m - 1);
-            a1 = a1.length < 1 ? " " : a1;
-            let b1 = b.slice(0, n);
-            b1 = b1.length < 1 ? " " : b1;
-            let b2 = a.slice(0, n);
-            b2 = b2.length < 1 ? " " : b2;
-            resultText.innerText =
-                `result: self('${a1}', '${b1}', ${m}-1, ${n}-1) + ` +
-                    `self('${a1}', '${b2}', ${m}-1, ${n})`;
-            let res1 = yield countStep(a, b, m - 1, n - 1);
-            let res2 = yield countStep(a, b, m - 1, n);
-            yield sleep(1000, "countStep");
-            resultText.innerText = `result: (${res1.id} + ${res2.id}) = ${res1.value + res2.value}`;
-            return new countStepResponse(res1.value + res2.value, content.id);
-        }
-        else {
-            let a1 = a.slice(0, m - 1);
-            a1 = a1.length < 1 ? " " : a1;
-            let b1 = b.slice(0, n);
-            b1 = b1.length < 1 ? " " : b1;
-            resultText.innerText = `result: self('${a1}', '${b1}', ${m}-1, ${n})`;
-            let res = yield countStep(a, b, m - 1, n);
-            yield sleep(1000, "countStep");
-            resultText.innerText = `result: (${res.id}) = ${res.value}`;
-            return new countStepResponse(res.value, content.id);
-        }
-    });
+class stackCall {
+    constructor(id, m, n, parent = null) {
+        this.result = [];
+        this.id = id;
+        this.m = m;
+        this.n = n;
+        this.parent = parent;
+    }
+}
+let idCount = 1;
+let stack = [];
+function countRecursiveView() {
+    let current = stack[stack.length - 1];
+    if (current.result.length > 0 && current.result.every((x) => x > -1)) {
+        var parent = document.querySelector(`#step: ${stack[current.parent].id}`);
+        var oldResultText = parent === null || parent === void 0 ? void 0 : parent.querySelectorAll("p")[3].innerText;
+        var first = oldResultText === null || oldResultText === void 0 ? void 0 : oldResultText.slice(0, oldResultText.indexOf(")"));
+        var second = oldResultText === null || oldResultText === void 0 ? void 0 : oldResultText.slice(oldResultText.indexOf("+"), oldResultText.length);
+    }
+    var content = addCountStep("countStep", 0);
+    var idText = content.querySelector(".id-box");
+    var mainStringText = content.querySelectorAll("p")[1];
+    var subStringText = content.querySelectorAll("p")[2];
+    var resultText = content.querySelectorAll("p")[3];
+    // Set the main string
+    mainStringText.innerText = `main string: '${mainStringRecursiveView.slice(0, current.m).length < 1
+        ? " "
+        : mainStringRecursiveView.slice(0, current.m - 1)}`;
+    let mainLast = mainStringRecursiveView.slice(current.m - 1, current.m);
+    let mainLastText = document.createElement("b");
+    mainLastText.innerText = mainLast;
+    mainStringText.appendChild(mainLastText);
+    mainStringText.insertAdjacentText("beforeend", "'");
+    // Set the sub string
+    subStringText.innerText = `main string: '${subStringRecursiveView.slice(0, current.n).length < 1
+        ? " "
+        : subStringRecursiveView.slice(0, current.n - 1)}`;
+    let subLast = subStringRecursiveView.slice(current.n - 1, current.n);
+    let subLastText = document.createElement("b");
+    subLastText.innerText = subLast;
+    subStringText.appendChild(subLastText);
+    subStringText.insertAdjacentText("beforeend", "'");
+    if (current.n == 0) {
+        current.result.push(1);
+        return;
+    }
+    if (current.m == 0) {
+        current.result.push(0);
+        return;
+    }
+    if (mainStringRecursiveView[current.m - 1] ==
+        subStringRecursiveView[current.n - 1]) {
+        idCount++;
+        stack.push(new stackCall(idCount, current.m - 1, current.n));
+        idCount++;
+        current.result = [-1, -1];
+        stack.push(new stackCall(idCount, current.m - 1, current.n - 1));
+    }
+    else {
+        idCount++;
+        stack.push(new stackCall(idCount, current.m - 1, current.n));
+        current.result = [-1];
+    }
 }
 //# sourceMappingURL=countView.js.map

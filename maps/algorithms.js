@@ -86,7 +86,7 @@ function findSub(main, sub) {
                 if (current.repeated > 1) {
                     if (prev.getValue() <= 0)
                         continue;
-                    if (main.charCodeAt(i - 1) != current.letter % 256) {
+                    if (i == 0 || main.charCodeAt(i - 1) != current.letter % 256) {
                         current.values.push(new repeatedValue());
                         current.values[current.values.length - 1].n = 0;
                         current.values[current.values.length - 1].backValue = prev.getValue();

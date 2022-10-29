@@ -9,13 +9,17 @@ body {
   all: unset;
   overflow: hidden;
   height: -webkit-fill-available;
+  height: -moz-available;
   display: flex;
   flex-direction: column;
 }
 
+body {
+  margin: 20px;
+}
+
 .main {
   display: flex;
-  margin: 20px 20px 0px 20px;
 }
 
 .box {
@@ -30,7 +34,7 @@ body {
   grid-area: unit;
   transition: all 0.3s;
   border-radius: 5px;
-  left: 0;
+  opacity: 0;
 }
 
 .back {
@@ -94,6 +98,7 @@ input {
 .result-box > div {
   display: flex;
   flex-direction: column;
+  z-index: 1;
   gap: 5px;
 }
 
@@ -103,7 +108,7 @@ input {
 .text {
   display: flex;
   flex-direction: column;
-  margin: 10px 20px;
+  margin: 10px 0px;
   gap: 5px;
 }
 
@@ -116,7 +121,6 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin: 0 20px;
   grid-area: unit;
   height: fit-content;
 }
@@ -135,7 +139,6 @@ button:active {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin: 0 20px;
   align-content: flex-start;
 }
 
@@ -144,14 +147,14 @@ button:active {
   grid-template: 1fr / 1fr;
   grid-template-areas: "unit";
   overflow-y: auto;
-  margin-bottom: 20px;
 }
 
 .overlay {
   grid-area: unit;
 }
 
-.id-box {
+.id-box,
+.map-items > div > p {
   background-color: hsl(0, 0%, 20%);
   border-radius: 5px;
   color: white;
@@ -159,4 +162,77 @@ button:active {
 
 b {
   font-weight: 600;
+}
+
+.unit {
+  grid-area: unit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+}
+.unit:nth-child(2) {
+  display: none;
+  gap: 5px;
+}
+
+.find-view {
+  display: flex;
+  flex-direction: column;
+  grid-area: unit;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0;
+}
+
+.value-content {
+  margin-top: 5px;
+}
+
+.map-items {
+  display: flex;
+  overflow: hidden;
+  width: -webkit-fill-available;
+  width: -moz-available;
+  scroll-behavior: smooth;
+  scroll-snap-type: proximity;
+  gap: 5px;
+}
+
+.map-items > div {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  min-width: fit-content;
+  margin-bottom: 5px;
+}
+
+.find-view > .border-box {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: -webkit-fill-available;
+  width: -moz-available;
+}
+
+.view-controls {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+div::-webkit-scrollbar {
+  background-color: hsl(0, 0%, 35%);
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  border: 3px solid white;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: hsl(0, 0%, 20%);
+  border-radius: 5px;
 }
