@@ -24,10 +24,10 @@ setTimeout(setHighlight, 100);
 window.addEventListener("resize", setHighlight);
 
 let inputMain = <HTMLInputElement>document.querySelector("#main")!;
-inputMain.value = "aananananana";
+inputMain.value = "aa";
 
 let inputSub = <HTMLInputElement>document.querySelector("#sub")!;
-inputSub.value = "aann";
+inputSub.value = "a";
 
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
@@ -88,6 +88,7 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
       resultBox.style.opacity = "0";
       resultBox.style.zIndex = "-1";
       countView.style.opacity = "1";
+      countView.style.zIndex = "1";
       resetView();
       showView(main, sub);
     }
@@ -105,16 +106,6 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
     }
   });
 });
-
-async function showView(main: string, sub: string) {
-  document.querySelector(".count-view>.recursive-tree")?.remove();
-  var parent = document.createElement("div");
-  parent.className = "recursive-tree";
-  document.querySelector("body>.grid>.count-view")?.append(parent);
-
-  resetCountRecursiveView(main, sub);
-  countRecursiveView();
-}
 
 async function sleep(ms: number, group?: string) {
   return new Promise((resolve) => {

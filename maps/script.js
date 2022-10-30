@@ -29,9 +29,9 @@ function setHighlight() {
 setTimeout(setHighlight, 100);
 window.addEventListener("resize", setHighlight);
 let inputMain = document.querySelector("#main");
-inputMain.value = "aananananana";
+inputMain.value = "aa";
 let inputSub = document.querySelector("#sub");
-inputSub.value = "aann";
+inputSub.value = "a";
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
 let cancelOp = false;
@@ -84,6 +84,7 @@ document.querySelectorAll("p.option").forEach((x) => {
             resultBox.style.opacity = "0";
             resultBox.style.zIndex = "-1";
             countView.style.opacity = "1";
+            countView.style.zIndex = "1";
             resetView();
             showView(main, sub);
         }
@@ -100,17 +101,6 @@ document.querySelectorAll("p.option").forEach((x) => {
         }
     }));
 });
-function showView(main, sub) {
-    var _a, _b;
-    return __awaiter(this, void 0, void 0, function* () {
-        (_a = document.querySelector(".count-view>.recursive-tree")) === null || _a === void 0 ? void 0 : _a.remove();
-        var parent = document.createElement("div");
-        parent.className = "recursive-tree";
-        (_b = document.querySelector("body>.grid>.count-view")) === null || _b === void 0 ? void 0 : _b.append(parent);
-        resetCountRecursiveView(main, sub);
-        countRecursiveView();
-    });
-}
 function sleep(ms, group) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve) => {

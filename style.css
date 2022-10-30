@@ -137,9 +137,17 @@ button:active {
 .count-view {
   grid-area: unit;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 5px;
   align-content: flex-start;
+  opacity: 0;
+  z-index: -1;
+}
+
+.recursive-tree {
+  display: flex;
+  flex-direction: column;
 }
 
 .grid {
