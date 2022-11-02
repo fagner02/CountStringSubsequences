@@ -127,6 +127,7 @@ function addRepeatedValueItem(repeated, parent) {
     parent === null || parent === void 0 ? void 0 : parent.appendChild(repeatedValue);
 }
 function updateMapItem(item) {
+    var _a;
     var infobox = document.querySelector("#item" + item.letter);
     console.log(infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p"), item.repeated.toString());
     var repeated = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p")[1];
@@ -145,6 +146,9 @@ function updateMapItem(item) {
     item.values.forEach((x) => {
         addRepeatedValueItem(x, valuesLayer);
     });
+    if (item.repeated < 2) {
+        addRepeatedValueItem(new repeatedValue(item.n, (_a = subMapView.get(item.prev)) === null || _a === void 0 ? void 0 : _a.getValue(), item.value), valuesLayer);
+    }
     valuesLayer.style.display = showingValues ? "flex" : "none";
     valuesLayer.style.height = height + "px";
     valuesLayer.className = "unit";

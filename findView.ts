@@ -162,6 +162,17 @@ function updateMapItem(item: item) {
   item.values.forEach((x) => {
     addRepeatedValueItem(x, valuesLayer);
   });
+  if (item.repeated < 2) {
+    addRepeatedValueItem(
+      new repeatedValue(
+        item.n,
+        subMapView.get(item.prev)?.getValue(),
+        item.value
+      ),
+      valuesLayer
+    );
+  }
+
   valuesLayer.style.display = showingValues ? "flex" : "none";
   valuesLayer.style.height = height + "px";
   valuesLayer.className = "unit";

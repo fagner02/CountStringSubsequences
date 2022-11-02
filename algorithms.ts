@@ -1,7 +1,12 @@
 class repeatedValue {
-  value: number = 0;
-  n: number = 0;
-  backValue: number = 0;
+  value: number;
+  n: number;
+  backValue: number;
+  constructor(n: number = 0, backValue: number = 0, value: number = 0) {
+    this.n = n;
+    this.backValue = backValue;
+    this.value = value;
+  }
 }
 
 class item {

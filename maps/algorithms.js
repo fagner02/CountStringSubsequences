@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 class repeatedValue {
-    constructor() {
-        this.value = 0;
-        this.n = 0;
-        this.backValue = 0;
+    constructor(n = 0, backValue = 0, value = 0) {
+        this.n = n;
+        this.backValue = backValue;
+        this.value = value;
     }
 }
 class item {

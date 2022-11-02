@@ -2,16 +2,18 @@
 function addCountStep(step, value) {
     var parent = document.querySelector(".recursive-tree");
     var content = document.createElement("div");
-    var title = document.createElement("div");
+    var stringsText = document.createElement("div");
     var idText = document.createElement("p");
     var mainStringText = document.createElement("p");
     var subStringText = document.createElement("p");
     var resultText = document.createElement("p");
     content.className = "border-box content";
     idText.className = "id-box";
+    stringsText.style.display = "flex";
+    stringsText.appendChild(mainStringText);
+    stringsText.appendChild(subStringText);
     content.appendChild(idText);
-    content.appendChild(mainStringText);
-    content.appendChild(subStringText);
+    content.appendChild(stringsText);
     content.appendChild(resultText);
     if (parent.lastChild == null)
         content.id = "step: 1";
