@@ -116,7 +116,7 @@ function countRecursiveView() {
     mainStringText.appendChild(mainLastText);
     mainStringText.insertAdjacentText("beforeend", "'");
     // Set the sub string
-    subStringText.innerText = `main string: '${subStringRecursiveView.slice(0, current.n).length < 1
+    subStringText.innerText = `sub string: '${subStringRecursiveView.slice(0, current.n).length < 1
         ? " "
         : subStringRecursiveView.slice(0, current.n - 1)}`;
     let subLast = subStringRecursiveView.slice(current.n - 1, current.n);

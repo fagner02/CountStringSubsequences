@@ -72,15 +72,17 @@
         </div>
       </div>
       <div class="count-view">
-        <button onclick="countRecursiveView()">next</button>
-        <button
-          onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
-          reset
-        </button>
+        <div class="controls">
+          <button
+            onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
+            reset
+          </button>
+          <button onclick="countRecursiveView()">next</button>
+        </div>
         <div class="recursive-tree"></div>
       </div>
       <div class="find-view">
-        <div class="view-controls">
+        <div class="controls">
           <button
             onclick="resetCountAggregateCalcView(inputMain.value, inputSub.value)">
             reset
@@ -92,9 +94,18 @@
           <div style="overflow-x: auto; display: flex">
             <div class="map-items"></div>
           </div>
-          <p class="sub-string">test</p>
-          <p class="main-string">test</p>
-          <p class="iterator">i:</p>
+          <div class="title-box border-box">
+            <p>sub string:</p>
+            <p class="sub-string">test</p>
+          </div>
+          <div class="title-box border-box">
+            <p>main string:</p>
+            <p class="main-string">test</p>
+          </div>
+          <div class="title-box border-box">
+            <p>i:</p>
+            <p class="iterator"></p>
+          </div>
         </div>
       </div>
     </div>

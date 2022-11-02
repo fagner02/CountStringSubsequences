@@ -21,6 +21,7 @@ let start = true;
 let done = true;
 let iteratorText = document.querySelector("p.iterator");
 let mainStringViewText = document.querySelector("p.main-string");
+let subStringViewText = document.querySelector("p.sub-string");
 let subMapViewItems = [];
 let showingValues = false;
 function showValues() {
@@ -57,8 +58,9 @@ function resetCountAggregateCalcView(mainString, subString) {
     subMapViewItems = [];
     i1 = 0;
     i2 = 0;
-    iteratorText.innerText = "i: ";
-    mainStringViewText.innerText = "";
+    iteratorText.innerText = "?";
+    mainStringViewText.innerText = mainString;
+    subStringViewText.innerText = subString;
     subMapView = new Map();
     previousView = null;
     lastView = null;
@@ -68,7 +70,6 @@ function resetCountAggregateCalcView(mainString, subString) {
     resolving = false;
     start = true;
     done = false;
-    mainStringViewText.innerText = mainString;
     countAggregateCalcView();
 }
 function addMapItem(item) {
@@ -99,7 +100,9 @@ function addMapItem(item) {
     content.id = "values" + item.letter;
     infoLayer.className = "unit";
     valuesLayer.className = "unit";
-    addRepeatedValueItem(new repeatedValue(0, 0, 0), valuesLayer);
+    if (item.letter != -1) {
+        addRepeatedValueItem(new repeatedValue(0, 0, 0), valuesLayer);
+    }
     infoLayer.appendChild(prev);
     infoLayer.appendChild(repeated);
     infoLayer.appendChild(values);
@@ -114,11 +117,18 @@ function addMapItem(item) {
     else {
         content.style.paddingRight = "0px";
     }
+    if (item.letter == -1) {
+        return;
+    }
     if (showingValues) {
         infoLayer.style.display = "none";
         valuesLayer.style.display = "flex";
         infoLayer.style.height = "0px";
         valuesLayer.style.height = valuesLayer.scrollHeight + "px";
+    }
+    else {
+        infoLayer.style.height = infoLayer.scrollHeight + "px";
+        valuesLayer.style.height = "0px";
     }
 }
 function addRepeatedValueItem(repeated, parent) {
@@ -127,7 +137,7 @@ function addRepeatedValueItem(repeated, parent) {
     var n = document.createElement("p");
     var prev = document.createElement("p");
     value.innerText = "value: " + repeated.value.toString();
-    n.innerText = "n: " + repeated.n.toString();
+    n.innerText = "n: " + (repeated.n == -1 ? "?" : repeated.n.toString());
     prev.innerText = "previous item value: " + repeated.backValue.toString();
     repeatedValue.className = "border-box";
     repeatedValue.appendChild(value);
@@ -135,12 +145,15 @@ function addRepeatedValueItem(repeated, parent) {
     repeatedValue.appendChild(prev);
     parent === null || parent === void 0 ? void 0 : parent.appendChild(repeatedValue);
 }
+let highlightedItems = [];
 function updateMapItem(item) {
     var _a;
     var infobox = document.querySelector("#item" + item.letter);
     console.log(infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p"), item.repeated.toString());
+    var idBox = infobox.querySelector("p");
     var repeated = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p")[1];
     var value = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p")[2];
+    idBox.style.backgroundColor = "hsl(130, 55%, 45%)";
     repeated.innerText = "repeat: " + item.repeated.toString();
     value.innerText =
         "value: [ " +
@@ -156,7 +169,10 @@ function updateMapItem(item) {
         addRepeatedValueItem(x, valuesLayer);
     });
     if (item.repeated < 2) {
-        addRepeatedValueItem(new repeatedValue(item.n, (_a = subMapView.get(item.prev)) === null || _a === void 0 ? void 0 : _a.getValue(), item.value), valuesLayer);
+        addRepeatedValueItem(new repeatedValue(-1, (_a = subMapView.get(item.prev)) === null || _a === void 0 ? void 0 : _a.getValue(), item.value), valuesLayer);
+    }
+    if (item.letter != -1 && valuesLayer.firstChild == null) {
+        addRepeatedValueItem(new repeatedValue(-1, 0, 0), valuesLayer);
     }
     valuesLayer.style.display = showingValues ? "flex" : "none";
     valuesLayer.style.height = height + "px";
@@ -169,6 +185,7 @@ function updateMapItem(item) {
     else {
         content.style.paddingRight = "0px";
     }
+    return idBox;
 }
 function setMap() {
     if (!(i1 < subStringView.length)) {
@@ -176,7 +193,8 @@ function setMap() {
         resolving = true;
         return;
     }
-    iteratorText.innerText = "i: " + i1;
+    iteratorText.innerText = i1.toString();
+    setSubStringView();
     if (i1 == 0) {
         previousView = new item(subStringView.charCodeAt(i1), -1);
         subMapView.set(subStringView.charCodeAt(i1), previousView);
@@ -211,17 +229,34 @@ function setMainStringView() {
     mainStringViewText.appendChild(b);
     mainStringViewText.insertAdjacentText("beforeend", mainStringView.slice(i2 + 1, mainStringView.length));
 }
+function setSubStringView() {
+    subStringViewText.innerText = subStringView.slice(0, i1);
+    var b = document.createElement("b");
+    b.innerText = subStringView[i1];
+    subStringViewText.appendChild(b);
+    subStringViewText.insertAdjacentText("beforeend", subStringView.slice(i1 + 1, subStringView.length));
+}
+function setHighlightedItems(active) {
+    highlightedItems.forEach((x) => {
+        x.style.backgroundColor = active ? "hsl(130, 55%, 45%)" : "hsl(0, 0%, 20%)";
+    });
+    if (!active) {
+        highlightedItems = [];
+    }
+}
 function resolveFind(mainStringView) {
     if (!(i2 < mainStringView.length)) {
         resolving = false;
         done = true;
         return;
     }
+    iteratorText.innerText = i2.toString();
     setMainStringView();
     if (!subMapView.has(mainStringView.charCodeAt(i2))) {
         i2++;
         return;
     }
+    setHighlightedItems(false);
     let index = mainStringView.charCodeAt(i2);
     while (subMapView.has(index)) {
         let current = subMapView.get(index);
@@ -247,14 +282,15 @@ function resolveFind(mainStringView) {
                         current.fat) *
                         current.values[i2].backValue;
                 subMapView.set(current.letter, current);
-                updateMapItem(current);
+                highlightedItems.push(updateMapItem(current));
             }
             continue;
         }
         current.value += prev.getValue();
         subMapView.set(current.letter, current);
-        updateMapItem(current);
+        highlightedItems.push(updateMapItem(current));
     }
+    setHighlightedItems(true);
     i2++;
 }
 function countAggregateCalcView() {

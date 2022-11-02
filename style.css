@@ -41,7 +41,6 @@ body {
   background: hsl(0, 0%, 20%);
   grid-area: unit;
   border-radius: 5px;
-  width: 10v;
 }
 
 .cells {
@@ -52,6 +51,10 @@ body {
   justify-content: center;
   cursor: pointer;
   flex-wrap: wrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .option {
@@ -130,8 +133,18 @@ input {
   gap: 5px;
 }
 
+button {
+  background-color: hsl(0, 0%, 20%);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+  transition: scale 0.3s;
+}
+
 button:active {
-  transform: scale(0.9);
+  scale: 0.9;
+  background-color: hsl(200, 50%, 50%);
 }
 
 .count-view {
@@ -150,8 +163,6 @@ button:active {
   flex-wrap: wrap;
   overflow-y: auto;
   gap: 5px;
-  height: -webkit-fill-available;
-  height: -moz-available;
 }
 
 .grid {
@@ -174,6 +185,24 @@ button:active {
 
 b {
   font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.sub-string,
+.main-string {
+  color: hsl(0, 0%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+}
+
+.sub-string > b,
+.main-string > b {
+  color: white;
+}
+
+.find-view > .border-box > .title-box:not(.title-box:last-child) {
+  margin-bottom: 5px;
 }
 
 .unit {
@@ -228,12 +257,12 @@ b {
 .find-view > .border-box {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
   width: -webkit-fill-available;
   width: -moz-available;
 }
 
-.view-controls {
+.controls {
   display: flex;
   gap: 5px;
   margin-bottom: 5px;
