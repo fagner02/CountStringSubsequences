@@ -176,9 +176,10 @@ button:active {
   grid-area: unit;
 }
 
-.id-box,
+.colored-box,
 .map-items > div > p {
   background-color: hsl(0, 0%, 20%);
+  width: fit-content;
   border-radius: 5px;
   color: white;
 }
@@ -191,8 +192,6 @@ b {
 .sub-string,
 .main-string {
   color: hsl(0, 0%, 50%);
-  background-color: hsl(0, 0%, 20%);
-  border-radius: 5px;
   overflow-wrap: anywhere;
 }
 
@@ -225,6 +224,7 @@ b {
   overflow: hidden;
   z-index: -1;
   opacity: 0;
+  gap: 5px;
 }
 
 .value-content {
@@ -265,7 +265,6 @@ b {
 .controls {
   display: flex;
   gap: 5px;
-  margin-bottom: 5px;
 }
 
 div::-webkit-scrollbar {

@@ -15,6 +15,10 @@ let done = true;
 let iteratorText = <HTMLElement>document.querySelector("p.iterator")!;
 let mainStringViewText = <HTMLElement>document.querySelector("p.main-string")!;
 let subStringViewText = <HTMLElement>document.querySelector("p.sub-string")!;
+let mapItems = <HTMLElement>document.querySelector(".map-items")!.parentElement;
+let resultText1 = <HTMLElement>(
+  document.querySelector(".find-view>.colored-box")!
+);
 let subMapViewItems: HTMLElement[] = [];
 
 let showingValues = false;
@@ -60,6 +64,8 @@ function resetCountAggregateCalcView(mainString: string, subString: string) {
   i1 = 0;
   i2 = 0;
   iteratorText.innerText = "?";
+  resultText1.innerText = "result: ?";
+  resultText1.style.backgroundColor = "hsl(0, 0%, 20%)";
   mainStringViewText.innerText = mainString;
   subStringViewText.innerText = subString;
   subMapView = new Map();
@@ -108,7 +114,7 @@ function addMapItem(item: item) {
   valuesLayer.className = "unit";
 
   if (item.letter != -1) {
-    addRepeatedValueItem(new repeatedValue(0, 0, 0), valuesLayer);
+    addRepeatedValueItem(new repeatedValue(-1, 0, 0), valuesLayer);
   }
 
   infoLayer.appendChild(prev);
@@ -127,7 +133,7 @@ function addMapItem(item: item) {
   }
 
   if (item.letter == -1) {
-    return;
+    return letter;
   }
   if (showingValues) {
     infoLayer.style.display = "none";
@@ -138,6 +144,8 @@ function addMapItem(item: item) {
     infoLayer.style.height = infoLayer.scrollHeight + "px";
     valuesLayer.style.height = "0px";
   }
+
+  return letter;
 }
 
 function addRepeatedValueItem(repeated: repeatedValue, parent: HTMLElement) {
@@ -217,6 +225,12 @@ function setMap() {
   if (!(i1 < subStringView.length)) {
     settingMap = false;
     resolving = true;
+    let sub = subStringViewText.innerText;
+    subStringViewText.innerText = "";
+    let b = document.createElement("b");
+    b.innerText = sub;
+    subStringViewText.appendChild(b);
+    setHighlightedItems(false);
     return;
   }
   iteratorText.innerText = i1.toString();
@@ -225,7 +239,9 @@ function setMap() {
   if (i1 == 0) {
     previousView = new item(subStringView.charCodeAt(i1), -1);
     subMapView.set(subStringView.charCodeAt(i1), previousView);
-    addMapItem(previousView);
+    setHighlightedItems(false);
+    highlightedItems.push(addMapItem(previousView));
+    setHighlightedItems(true, false);
     lastView = previousView;
     i1++;
     return;
@@ -236,7 +252,9 @@ function setMap() {
     previousView!.fat = calcLowerRepeated(previousView!.repeated);
     subMapView.set(previousView!.letter, previousView!);
     lastView = previousView!;
-    updateMapItem(previousView!);
+    setHighlightedItems(false);
+    highlightedItems.push(updateMapItem(previousView!));
+    setHighlightedItems(true, false);
     i1++;
     return;
   }
@@ -248,7 +266,9 @@ function setMap() {
 
   previousView = new item(index, previousView!.letter);
   subMapView.set(index, previousView);
-  addMapItem(previousView);
+  setHighlightedItems(false);
+  highlightedItems.push(addMapItem(previousView));
+  setHighlightedItems(true, false);
   lastView = previousView;
   i1++;
 }
@@ -275,19 +295,44 @@ function setSubStringView() {
   );
 }
 
-function setHighlightedItems(active: boolean) {
+function setHighlightedItems(active: boolean, useResolveColor = true) {
   highlightedItems.forEach((x) => {
-    x.style.backgroundColor = active ? "hsl(130, 55%, 45%)" : "hsl(0, 0%, 20%)";
+    x.style.backgroundColor = active
+      ? useResolveColor
+        ? "hsl(130, 55%, 45%)"
+        : "hsl(200, 50%, 50%)"
+      : "hsl(0, 0%, 20%)";
   });
+
   if (!active) {
     highlightedItems = [];
+    return;
   }
+  scrollToItem(highlightedItems[highlightedItems.length - 1]);
+}
+
+function scrollToItem(item: HTMLElement) {
+  let pos = item.offsetLeft - mapItems.offsetLeft - 10;
+  let max = mapItems.scrollWidth - mapItems.offsetWidth;
+  mapItems.scrollTo({
+    behavior: "smooth",
+    left: pos > max ? max : pos,
+  });
 }
 
 function resolveFind(mainStringView: string) {
   if (!(i2 < mainStringView.length)) {
     resolving = false;
     done = true;
+    setHighlightedItems(false);
+    resultText1.innerText = "result: " + previousView?.getValue().toString();
+    highlightedItems.push(resultText1);
+    setHighlightedItems(true);
+    let main = mainStringViewText.innerText;
+    let b = document.createElement("b");
+    b.innerText = main;
+    mainStringViewText.innerText = "";
+    mainStringViewText.appendChild(b);
     return;
   }
 

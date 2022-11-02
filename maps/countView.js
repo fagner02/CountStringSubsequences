@@ -1,4 +1,6 @@
 "use strict";
+let resultText2 = (document.querySelector(".count-view>.colored-box"));
+let recursiveTree = document.querySelector(".recursive-tree");
 function addCountStep() {
     var parent = document.querySelector(".recursive-tree");
     var content = document.createElement("div");
@@ -8,7 +10,7 @@ function addCountStep() {
     var subStringText = document.createElement("p");
     var resultText = document.createElement("p");
     content.className = "border-box content";
-    idText.className = "id-box";
+    idText.className = "colored-box";
     stringsText.style.display = "flex";
     stringsText.appendChild(mainStringText);
     stringsText.appendChild(subStringText);
@@ -31,6 +33,9 @@ function resetCountRecursiveView(main, sub) {
     var parent = document.createElement("div");
     parent.className = "recursive-tree";
     (_b = document.querySelector("body>.grid>.count-view")) === null || _b === void 0 ? void 0 : _b.append(parent);
+    recursiveTree = parent;
+    resultText2.innerText = "result: ?";
+    resultText2.style.backgroundColor = "hsl(0, 0%, 20%)";
     stack = [];
     idCount = 1;
     mainStringRecursiveView = main;
@@ -58,17 +63,32 @@ class stackCall {
 }
 let idCount = 1;
 let stack = [];
+let highlightedStep = null;
 function setResultText(resultText, current) {
+    if (current.result.length == 1) {
+        resultText.innerText = `result: recur(${mainStringRecursiveView.slice(0, current.m - 1)},${subStringRecursiveView.slice(0, current.n)}, ${current.m - 1}, ${current.n})`;
+        return;
+    }
     resultText.innerText = `result: recur(${mainStringRecursiveView.slice(0, current.m - 1)},${subStringRecursiveView.slice(0, current.n - 1)}, ${current.m - 1}, ${current.n - 1}) + recur(${mainStringRecursiveView.slice(0, current.m - 1)},${subStringRecursiveView.slice(0, current.n)}, ${current.m - 1}, ${current.n})`;
+}
+function scrollToStep(content) {
+    let pos = content.offsetTop - recursiveTree.offsetTop;
+    let max = recursiveTree.scrollHeight - recursiveTree.offsetHeight;
+    recursiveTree.scrollTo({
+        behavior: "smooth",
+        top: pos > max ? max : pos,
+    });
 }
 function countRecursiveView() {
     if (startCountRecursiveView) {
         stack.push(new stackCall(idCount, mainStringRecursiveView.length, subStringRecursiveView.length));
-        startCountRecursiveView = false;
     }
     let current = stack[stack.length - 1];
     if (current.result.length > 0 && current.result.every((x) => x > -1)) {
         if (current.parent == null) {
+            resultText2.innerText = `result: ${current.result.reduce((a, b) => a + b, 0)}`;
+            resultText2.style.backgroundColor = "hsl(120, 55%, 45%)";
+            highlightedStep.style.backgroundColor = "hsl(0, 0%, 100%)";
             return;
         }
         var parentCall = stack[current.parent];
@@ -78,11 +98,18 @@ function countRecursiveView() {
         var second = parentCall.result[0] > -1
             ? `(step: ${parentCall.children[1]})`
             : `recur(${mainStringRecursiveView.slice(0, parentCall.m - 1)},${subStringRecursiveView.slice(0, parentCall.n)}, ${parentCall.m - 1}, ${parentCall.n})`;
+        highlightedStep.style.backgroundColor = "hsl(0, 0%, 100%)";
+        parent.style.backgroundColor = "hsl(250, 55%, 80%)";
+        highlightedStep = parent;
         if (parentCall.result[0] == -1) {
             parentCall.result[0] = current.result.reduce((a, b) => a + b, 0);
+            if (parentCall.result.length == 1) {
+                (parent === null || parent === void 0 ? void 0 : parent.querySelector(".colored-box")).style.backgroundColor = "hsl(250, 55%, 45%)";
+            }
         }
         else {
             parentCall.result[1] = current.result.reduce((a, b) => a + b, 0);
+            (parent === null || parent === void 0 ? void 0 : parent.querySelector(".colored-box")).style.backgroundColor = "hsl(250, 55%, 45%)";
         }
         var result = parentCall.result
             .filter((x) => x > -1)
@@ -93,6 +120,7 @@ function countRecursiveView() {
         else {
             oldResult.innerText = `result: ${first} + ${second} = ${result}`;
         }
+        scrollToStep(parent);
         stack.pop();
         return;
     }
@@ -100,12 +128,17 @@ function countRecursiveView() {
         idCount++;
         stack.push(new stackCall(idCount, current.m - 1, current.n, stack.indexOf(current)));
         current.children = [current.children[0], idCount];
-        return;
+        return countRecursiveView();
     }
     var content = addCountStep();
+    var idText = content.querySelector(".colored-box");
     var mainStringText = content.querySelectorAll("p")[1];
     var subStringText = content.querySelectorAll("p")[2];
     var resultText = content.querySelectorAll("p")[3];
+    if (startCountRecursiveView) {
+        highlightedStep = content;
+        startCountRecursiveView = false;
+    }
     // Set the main string
     mainStringText.innerText = `main string: '${mainStringRecursiveView.slice(0, current.m).length < 1
         ? " "
@@ -127,13 +160,26 @@ function countRecursiveView() {
     if (current.n == 0) {
         current.result.push(1);
         resultText.innerText = "result: 1";
+        idText.style.backgroundColor = "hsl(120, 55%, 45%)";
+        highlightedStep.style.backgroundColor = "hsl(0, 0%, 100%)";
+        content.style.backgroundColor = "hsl(120, 55%, 80%)";
+        highlightedStep = content;
+        scrollToStep(content);
         return;
     }
     if (current.m == 0) {
         current.result.push(0);
         resultText.innerText = "result: 0";
+        idText.style.backgroundColor = "hsl(200, 55%, 45%)";
+        highlightedStep.style.backgroundColor = "hsl(0, 0%, 100%)";
+        content.style.backgroundColor = "hsl(200, 55%, 80%)";
+        highlightedStep = content;
+        scrollToStep(content);
         return;
     }
+    highlightedStep.style.backgroundColor = "hsl(0, 0%, 100%)";
+    content.style.backgroundColor = "hsl(250, 55%, 80%)";
+    highlightedStep = content;
     if (mainStringRecursiveView[current.m - 1] ==
         subStringRecursiveView[current.n - 1]) {
         idCount++;
@@ -141,12 +187,23 @@ function countRecursiveView() {
         current.result = [-1, -1];
         current.children = [idCount, -1];
         setResultText(resultText, current);
+        recursiveTree.scrollTo({
+            behavior: "smooth",
+            top: content.offsetTop - recursiveTree.offsetTop,
+        });
+        scrollToStep(content);
     }
     else {
         idCount++;
         stack.push(new stackCall(idCount, current.m - 1, current.n, stack.indexOf(current)));
         current.children = [idCount];
         current.result = [-1];
+        setResultText(resultText, current);
+        recursiveTree.scrollTo({
+            behavior: "smooth",
+            top: content.offsetTop - recursiveTree.offsetTop,
+        });
+        scrollToStep(content);
     }
 }
 let startCountRecursiveView = true;
