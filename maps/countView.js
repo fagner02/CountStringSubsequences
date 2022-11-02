@@ -1,5 +1,5 @@
 "use strict";
-function addCountStep(step, value) {
+function addCountStep() {
     var parent = document.querySelector(".recursive-tree");
     var content = document.createElement("div");
     var stringsText = document.createElement("div");
@@ -35,6 +35,8 @@ function resetCountRecursiveView(main, sub) {
     idCount = 1;
     mainStringRecursiveView = main;
     subStringRecursiveView = sub;
+    startCountRecursiveView = true;
+    countRecursiveView();
 }
 let mainStringRecursiveView;
 let subStringRecursiveView;
@@ -60,6 +62,10 @@ function setResultText(resultText, current) {
     resultText.innerText = `result: recur(${mainStringRecursiveView.slice(0, current.m - 1)},${subStringRecursiveView.slice(0, current.n - 1)}, ${current.m - 1}, ${current.n - 1}) + recur(${mainStringRecursiveView.slice(0, current.m - 1)},${subStringRecursiveView.slice(0, current.n)}, ${current.m - 1}, ${current.n})`;
 }
 function countRecursiveView() {
+    if (startCountRecursiveView) {
+        stack.push(new stackCall(idCount, mainStringRecursiveView.length, subStringRecursiveView.length));
+        startCountRecursiveView = false;
+    }
     let current = stack[stack.length - 1];
     if (current.result.length > 0 && current.result.every((x) => x > -1)) {
         if (current.parent == null) {
@@ -96,7 +102,7 @@ function countRecursiveView() {
         current.children = [current.children[0], idCount];
         return;
     }
-    var content = addCountStep("countStep", 0);
+    var content = addCountStep();
     var mainStringText = content.querySelectorAll("p")[1];
     var subStringText = content.querySelectorAll("p")[2];
     var resultText = content.querySelectorAll("p")[3];
@@ -143,9 +149,5 @@ function countRecursiveView() {
         current.result = [-1];
     }
 }
-function showView(main, sub) {
-    resetCountRecursiveView(main, sub);
-    stack.push(new stackCall(idCount, main.length, sub.length, null));
-    countRecursiveView();
-}
+let startCountRecursiveView = true;
 //# sourceMappingURL=countView.js.map

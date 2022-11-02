@@ -48,35 +48,15 @@ document.querySelectorAll("p.option").forEach((x) => {
         let resultBox = document.querySelector(".result-box");
         let countView = document.querySelector(".count-view");
         let findView = document.querySelector(".find-view");
-        if (x.innerText == "Old") {
-            resetCountRecursiveView("", "");
-            resetView();
+        if (x.innerText == "Results") {
             resultBox.style.opacity = "1";
             resultBox.style.zIndex = "1";
             countView.style.opacity = "0";
             findView.style.opacity = "0";
-            setOl(main, sub);
-            return;
-        }
-        if (x.innerText == "Optimized") {
-            resetCountRecursiveView("", "");
-            resetView();
-            resultBox.style.opacity = "1";
-            resultBox.style.zIndex = "1";
-            countView.style.opacity = "0";
-            findView.style.opacity = "0";
-            setOp(main, sub);
-            return;
-        }
-        if (x.innerText == "Both") {
-            resetCountRecursiveView("", "");
-            resetView();
-            resultBox.style.opacity = "1";
-            resultBox.style.zIndex = "1";
-            countView.style.opacity = "0";
-            findView.style.opacity = "0";
-            yield setOp(main, sub);
-            yield setOl(main, sub);
+            countView.style.zIndex = "-1";
+            findView.style.zIndex = "-1";
+            yield setOptimizedResult(main, sub);
+            yield setOldResult(main, sub);
         }
         if (x.innerText == "Visualize-Old-Code") {
             findView.style.opacity = "0";
@@ -85,8 +65,9 @@ document.querySelectorAll("p.option").forEach((x) => {
             resultBox.style.zIndex = "-1";
             countView.style.opacity = "1";
             countView.style.zIndex = "1";
-            resetView();
-            showView(main, sub);
+            if (startCountRecursiveView) {
+                resetCountRecursiveView(main, sub);
+            }
         }
         if (x.innerText == "Visualize-Optimized-Code") {
             resultBox.style.opacity = "0";
@@ -95,9 +76,9 @@ document.querySelectorAll("p.option").forEach((x) => {
             countView.style.zIndex = "-1";
             findView.style.opacity = "1";
             findView.style.zIndex = "1";
-            resetCountRecursiveView("", "");
-            resetView();
-            findSubView(main, sub);
+            if (start) {
+                resetCountAggregateCalcView(main, sub);
+            }
         }
     }));
 });
@@ -124,9 +105,9 @@ function cancelOpFunc() {
         return;
     cancelOp = true;
 }
-function setOp(main, sub) {
+function setOptimizedResult(main, sub) {
     return __awaiter(this, void 0, void 0, function* () {
-        var asum = 0;
+        var sum = 0;
         runningOp = true;
         for (let i = 0; i < 100; i++) {
             if (cancelOp) {
@@ -136,18 +117,18 @@ function setOp(main, sub) {
             var start = performance.now();
             resultsOp[1].innerText = `result: ${(yield findSub(main, sub)).toString()}`;
             var end = performance.now();
-            asum += end - start;
+            sum += end - start;
             resultsOp[0].innerText = `batch item: ${i.toString()}`;
-            let time = (asum / (i + 1)).toString();
+            let time = (sum / (i + 1)).toString();
             resultsOp[2].innerText = `average timing: ${time.slice(0, time.indexOf(".") + 5)}ms`;
             yield sleep(0);
         }
         runningOp = false;
     });
 }
-function setOl(main, sub) {
+function setOldResult(main, sub) {
     return __awaiter(this, void 0, void 0, function* () {
-        var asum = 0;
+        var sum = 0;
         runningOl = true;
         for (let i = 0; i < 100; i++) {
             if (cancelOl) {
@@ -162,9 +143,9 @@ function setOl(main, sub) {
                 return;
             }
             var end = performance.now();
-            asum += end - start;
+            sum += end - start;
             resultsOl[0].innerText = `batch item: ${i.toString()}`;
-            let time = (asum / (i + 1)).toString();
+            let time = (sum / (i + 1)).toString();
             resultsOl[2].innerText = `average timing: ${time.slice(0, time.indexOf(".") + 5)}ms`;
             yield sleep(0);
         }

@@ -49,7 +49,7 @@ function showValues() {
     });
     showingValues = true;
 }
-function resetView() {
+function resetCountAggregateCalcView(mainString, subString) {
     document.querySelector(".map-items").remove();
     var mapItems = document.createElement("div");
     mapItems.className = "map-items";
@@ -62,12 +62,14 @@ function resetView() {
     subMapView = new Map();
     previousView = null;
     lastView = null;
-    mainStringView = "";
-    subStringView = "";
+    mainStringView = mainString;
+    subStringView = subString;
     settingMap = false;
     resolving = false;
     start = true;
     done = false;
+    mainStringViewText.innerText = mainString;
+    countAggregateCalcView();
 }
 function addMapItem(item) {
     var infobox = document.createElement("div");
@@ -97,6 +99,7 @@ function addMapItem(item) {
     content.id = "values" + item.letter;
     infoLayer.className = "unit";
     valuesLayer.className = "unit";
+    addRepeatedValueItem(new repeatedValue(0, 0, 0), valuesLayer);
     infoLayer.appendChild(prev);
     infoLayer.appendChild(repeated);
     infoLayer.appendChild(values);
@@ -110,6 +113,12 @@ function addMapItem(item) {
     }
     else {
         content.style.paddingRight = "0px";
+    }
+    if (showingValues) {
+        infoLayer.style.display = "none";
+        valuesLayer.style.display = "flex";
+        infoLayer.style.height = "0px";
+        valuesLayer.style.height = valuesLayer.scrollHeight + "px";
     }
 }
 function addRepeatedValueItem(repeated, parent) {
@@ -248,12 +257,9 @@ function resolveFind(mainStringView) {
     }
     i2++;
 }
-function findSubView(main, sub) {
+function countAggregateCalcView() {
     return __awaiter(this, void 0, void 0, function* () {
         if (start) {
-            mainStringView = main;
-            subStringView = sub;
-            mainStringViewText.innerText = main;
             subMapView.set(-1, new item(-1, -2, 1));
             addMapItem(subMapView.get(-1));
             start = false;

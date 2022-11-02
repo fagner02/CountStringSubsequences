@@ -49,37 +49,15 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
     let countView = <HTMLElement>document.querySelector(".count-view");
     let findView = <HTMLElement>document.querySelector(".find-view");
 
-    if (x.innerText == "Old") {
-      resetCountRecursiveView("", "");
-      resetView();
+    if (x.innerText == "Results") {
       resultBox.style.opacity = "1";
       resultBox.style.zIndex = "1";
       countView.style.opacity = "0";
       findView.style.opacity = "0";
-      setOl(main, sub);
-      return;
-    }
-
-    if (x.innerText == "Optimized") {
-      resetCountRecursiveView("", "");
-      resetView();
-      resultBox.style.opacity = "1";
-      resultBox.style.zIndex = "1";
-      countView.style.opacity = "0";
-      findView.style.opacity = "0";
-      setOp(main, sub);
-      return;
-    }
-
-    if (x.innerText == "Both") {
-      resetCountRecursiveView("", "");
-      resetView();
-      resultBox.style.opacity = "1";
-      resultBox.style.zIndex = "1";
-      countView.style.opacity = "0";
-      findView.style.opacity = "0";
-      await setOp(main, sub);
-      await setOl(main, sub);
+      countView.style.zIndex = "-1";
+      findView.style.zIndex = "-1";
+      await setOptimizedResult(main, sub);
+      await setOldResult(main, sub);
     }
 
     if (x.innerText == "Visualize-Old-Code") {
@@ -89,8 +67,9 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
       resultBox.style.zIndex = "-1";
       countView.style.opacity = "1";
       countView.style.zIndex = "1";
-      resetView();
-      showView(main, sub);
+      if (startCountRecursiveView) {
+        resetCountRecursiveView(main, sub);
+      }
     }
 
     if (x.innerText == "Visualize-Optimized-Code") {
@@ -100,9 +79,9 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
       countView.style.zIndex = "-1";
       findView.style.opacity = "1";
       findView.style.zIndex = "1";
-      resetCountRecursiveView("", "");
-      resetView();
-      findSubView(main, sub);
+      if (start) {
+        resetCountAggregateCalcView(main, sub);
+      }
     }
   });
 });
@@ -129,8 +108,8 @@ function cancelOpFunc() {
   cancelOp = true;
 }
 
-async function setOp(main: string, sub: string) {
-  var asum = 0;
+async function setOptimizedResult(main: string, sub: string) {
+  var sum = 0;
   runningOp = true;
   for (let i = 0; i < 100; i++) {
     if (cancelOp) {
@@ -145,10 +124,10 @@ async function setOp(main: string, sub: string) {
     ).toString()}`;
 
     var end = performance.now();
-    asum += end - start;
+    sum += end - start;
 
     (<HTMLElement>resultsOp[0]).innerText = `batch item: ${i.toString()}`;
-    let time = (asum / (i + 1)).toString();
+    let time = (sum / (i + 1)).toString();
     (<HTMLElement>resultsOp[2]).innerText = `average timing: ${time.slice(
       0,
       time.indexOf(".") + 5
@@ -158,8 +137,8 @@ async function setOp(main: string, sub: string) {
   runningOp = false;
 }
 
-async function setOl(main: string, sub: string) {
-  var asum = 0;
+async function setOldResult(main: string, sub: string) {
+  var sum = 0;
   runningOl = true;
   for (let i = 0; i < 100; i++) {
     if (cancelOl) {
@@ -177,9 +156,9 @@ async function setOl(main: string, sub: string) {
     }
 
     var end = performance.now();
-    asum += end - start;
+    sum += end - start;
     (<HTMLElement>resultsOl[0]).innerText = `batch item: ${i.toString()}`;
-    let time = (asum / (i + 1)).toString();
+    let time = (sum / (i + 1)).toString();
     (<HTMLElement>resultsOl[2]).innerText = `average timing: ${time.slice(
       0,
       time.indexOf(".") + 5

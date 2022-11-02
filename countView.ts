@@ -1,4 +1,4 @@
-function addCountStep(step: string, value: number) {
+function addCountStep() {
   var parent = <HTMLElement>document.querySelector(".recursive-tree");
   var content = document.createElement("div");
   var stringsText = document.createElement("div");
@@ -42,6 +42,9 @@ function resetCountRecursiveView(main: string, sub: string) {
   idCount = 1;
   mainStringRecursiveView = main;
   subStringRecursiveView = sub;
+  startCountRecursiveView = true;
+
+  countRecursiveView();
 }
 
 let mainStringRecursiveView: string;
@@ -89,6 +92,17 @@ function setResultText(resultText: HTMLElement, current: stackCall) {
 }
 
 function countRecursiveView() {
+  if (startCountRecursiveView) {
+    stack.push(
+      new stackCall(
+        idCount,
+        mainStringRecursiveView.length,
+        subStringRecursiveView.length
+      )
+    );
+    startCountRecursiveView = false;
+  }
+
   let current = stack[stack.length - 1];
 
   if (current.result.length > 0 && current.result.every((x) => x > -1)) {
@@ -137,7 +151,7 @@ function countRecursiveView() {
     return;
   }
 
-  var content = <HTMLElement>addCountStep("countStep", 0);
+  var content = <HTMLElement>addCountStep();
   var mainStringText = <HTMLElement>content.querySelectorAll("p")[1];
   var subStringText = <HTMLElement>content.querySelectorAll("p")[2];
   var resultText = <HTMLElement>content.querySelectorAll("p")[3];
@@ -208,9 +222,4 @@ function countRecursiveView() {
   }
 }
 
-function showView(main: string, sub: string) {
-  resetCountRecursiveView(main, sub);
-
-  stack.push(new stackCall(idCount, main.length, sub.length, null));
-  countRecursiveView();
-}
+let startCountRecursiveView = true;

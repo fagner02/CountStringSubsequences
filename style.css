@@ -138,7 +138,7 @@ button:active {
   grid-area: unit;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  overflow: hidden;
   gap: 5px;
   align-content: flex-start;
   opacity: 0;
@@ -148,7 +148,10 @@ button:active {
 .recursive-tree {
   display: flex;
   flex-wrap: wrap;
+  overflow-y: auto;
   gap: 5px;
+  height: -webkit-fill-available;
+  height: -moz-available;
 }
 
 .grid {
@@ -197,6 +200,10 @@ b {
 
 .value-content {
   margin-top: 5px;
+}
+
+.content {
+  height: fit-content;
 }
 
 .map-items {

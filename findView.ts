@@ -47,7 +47,7 @@ function showValues() {
   showingValues = true;
 }
 
-function resetView() {
+function resetCountAggregateCalcView(mainString: string, subString: string) {
   (<HTMLElement>document.querySelector(".map-items")).remove();
   var mapItems = document.createElement("div");
   mapItems.className = "map-items";
@@ -63,12 +63,16 @@ function resetView() {
   subMapView = new Map();
   previousView = null;
   lastView = null;
-  mainStringView = "";
-  subStringView = "";
+  mainStringView = mainString;
+  subStringView = subString;
   settingMap = false;
   resolving = false;
   start = true;
   done = false;
+
+  mainStringViewText.innerText = mainString;
+
+  countAggregateCalcView();
 }
 
 function addMapItem(item: item) {
@@ -103,6 +107,8 @@ function addMapItem(item: item) {
   infoLayer.className = "unit";
   valuesLayer.className = "unit";
 
+  addRepeatedValueItem(new repeatedValue(0, 0, 0), valuesLayer);
+
   infoLayer.appendChild(prev);
   infoLayer.appendChild(repeated);
   infoLayer.appendChild(values);
@@ -116,6 +122,13 @@ function addMapItem(item: item) {
     content.style.paddingRight = "5px";
   } else {
     content.style.paddingRight = "0px";
+  }
+
+  if (showingValues) {
+    infoLayer.style.display = "none";
+    valuesLayer.style.display = "flex";
+    infoLayer.style.height = "0px";
+    valuesLayer.style.height = valuesLayer.scrollHeight + "px";
   }
 }
 
@@ -283,12 +296,8 @@ function resolveFind(mainStringView: string) {
   i2++;
 }
 
-async function findSubView(main: string, sub: string) {
+async function countAggregateCalcView() {
   if (start) {
-    mainStringView = main;
-    subStringView = sub;
-    mainStringViewText.innerText = main;
-
     subMapView.set(-1, new item(-1, -2, 1));
     addMapItem(subMapView.get(-1)!);
     start = false;
