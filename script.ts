@@ -31,6 +31,7 @@ inputSub.value = "a";
 
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
+let resultthree = document.querySelectorAll(".result-three > p");
 
 let cancelOp = false;
 let cancelOl = false;
@@ -166,4 +167,31 @@ async function setOldResult(main: string, sub: string) {
     await sleep(0);
   }
   runningOl = false;
+}
+
+async function setThreeResult(main: string, sub: string) {
+  var sum = 0;
+  // runningOl = true;
+  for (let i = 0; i < 100; i++) {
+    // if (cancelOl) {
+    //   cancelOl = false;
+    //   return;
+    // }
+    var start = performance.now();
+
+    (<HTMLElement>resultthree[1]).innerText = `result: ${(
+      await three(main, sub)
+    ).toString()}`;
+
+    var end = performance.now();
+    sum += end - start;
+    (<HTMLElement>resultthree[0]).innerText = `batch item: ${i.toString()}`;
+    let time = (sum / (i + 1)).toString();
+    (<HTMLElement>resultthree[2]).innerText = `average timing: ${time.slice(
+      0,
+      time.indexOf(".") + 5
+    )}ms`;
+    await sleep(0);
+  }
+  // runningOl = false;
 }

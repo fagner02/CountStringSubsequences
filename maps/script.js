@@ -34,6 +34,7 @@ let inputSub = document.querySelector("#sub");
 inputSub.value = "a";
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
+let resultthree = document.querySelectorAll(".result-three > p");
 let cancelOp = false;
 let cancelOl = false;
 let runningOp = false;
@@ -150,6 +151,27 @@ function setOldResult(main, sub) {
             yield sleep(0);
         }
         runningOl = false;
+    });
+}
+function setThreeResult(main, sub) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var sum = 0;
+        // runningOl = true;
+        for (let i = 0; i < 100; i++) {
+            // if (cancelOl) {
+            //   cancelOl = false;
+            //   return;
+            // }
+            var start = performance.now();
+            resultthree[1].innerText = `result: ${(yield three(main, sub)).toString()}`;
+            var end = performance.now();
+            sum += end - start;
+            resultthree[0].innerText = `batch item: ${i.toString()}`;
+            let time = (sum / (i + 1)).toString();
+            resultthree[2].innerText = `average timing: ${time.slice(0, time.indexOf(".") + 5)}ms`;
+            yield sleep(0);
+        }
+        // runningOl = false;
     });
 }
 //# sourceMappingURL=script.js.map

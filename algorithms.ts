@@ -1,28 +1,9 @@
-class repeatedValue {
-  value: number;
-  n: number;
-  backValue: number;
-  constructor(n: number = 0, backValue: number = 0, value: number = 0) {
-    this.n = n;
-    this.backValue = backValue;
-    this.value = value;
-  }
-}
-
 class item {
   letter: number;
+  code: number = -1;
   prev: number;
-  fat: number = 0;
   value: number;
-  getValue() {
-    if (this.repeated > 1) {
-      return this.values.map((x) => x.value).reduce((a, b) => a + b, 0);
-    }
-    return this.value;
-  }
-  repeated: number = 1;
-  n: number = 0;
-  values: repeatedValue[] = [];
+  count: number = 1;
   constructor(letter: number, prev: number, value: number = 0) {
     this.letter = letter;
     this.prev = prev;
@@ -30,92 +11,53 @@ class item {
   }
 }
 
-function calcUpperRepeated(n: number, repeat: number) {
-  if (n < repeat) return 0;
-  let result = 1;
-  for (let i = n; i > n - repeat; i--) {
-    result *= i;
-  }
-  return result;
-}
-
-function calcLowerRepeated(n: number): number {
-  if (n == 0) return 1;
-  return n * calcLowerRepeated(n - 1);
-}
-
 async function findSub(main: string, sub: string) {
-  let subMap: Map<number, item> = new Map();
-  let previous = null;
-  let last = null;
-  subMap.set(-1, new item(-1, -1, 1));
+  let previous: item | null = null;
+  let subMap: any = {};
+
+  subMap[-1] = new item(-1, -1, 1);
 
   for (var i = 0; i < sub.length; i++) {
-    if (i == 0) {
-      previous = new item(sub.charCodeAt(i), -1);
-      subMap.set(sub.charCodeAt(i), previous);
-      last = previous;
-      continue;
+    let charCodeAt: number = sub.charCodeAt(i);
+
+    let index = charCodeAt;
+    let last = subMap[index];
+    if (last != undefined) {
+      index = index + last!.count * 256;
+      last!.count++;
     }
 
-    if (previous!.letter % 256 == sub.charCodeAt(i)) {
-      previous!.repeated++;
-      previous!.fat = calcLowerRepeated(previous!.repeated);
+    previous =
+      i == 0
+        ? (previous = new item(charCodeAt, -1))
+        : new item(index, previous!.letter);
+    previous.code = charCodeAt;
 
-      subMap.set(previous!.letter, previous!);
-
-      last = previous!;
-      continue;
-    }
-
-    let index = sub.charCodeAt(i);
-    while (subMap.has(index)) {
-      index += 256;
-    }
-
-    previous = new item(index, previous!.letter);
-    subMap.set(index, previous);
-    last = previous;
+    subMap[index] = previous;
   }
 
   for (let i = 0; i < main.length; i++) {
-    if (!subMap.has(main.charCodeAt(i))) {
+    var index = main.charCodeAt(i);
+    let current = subMap[index];
+    if (current == undefined) {
       continue;
     }
-    let index = main.charCodeAt(i);
-    while (subMap.has(index)) {
-      let current = subMap.get(index)!;
-      let prev = subMap.get(current.prev)!;
-      index += 256;
-      if (current.repeated > 1) {
-        if (prev.getValue() <= 0) continue;
-        if (i == 0 || main.charCodeAt(i - 1) != current.letter % 256) {
-          current.values.push(new repeatedValue());
-          current.values[current.values.length - 1].n = 0;
-          current.values[current.values.length - 1].backValue = prev.getValue();
-          if (current.values.length > 1) {
-            current.values.slice(0, -1).forEach((x) => {
-              current.values[current.values.length - 1].backValue -=
-                x.backValue;
-            });
-          }
-        }
-
-        for (let i = 0; i < current.values.length; i++) {
-          current.values[i].n++;
-          current.values[i].value =
-            (calcUpperRepeated(current.values[i].n, current.repeated) /
-              current.fat) *
-            current.values[i].backValue;
-        }
-        continue;
+    let initial = current.count;
+    let last = subMap[current.prev].value;
+    for (let k = 0; k < initial; k++) {
+      let current = subMap[index];
+      let newLast = current.value;
+      let prev = subMap[current.prev];
+      if (current.code != prev.code) {
+        current.value += prev.value;
+      } else {
+        current.value += last;
       }
-
-      current.value += prev.getValue();
-      subMap.set(current.letter, current);
+      last = newLast;
+      index += 256;
     }
   }
-  return last!.getValue();
+  return previous!.value;
 }
 
 async function count(a: any, b: any, m: any, n: any): Promise<number> {

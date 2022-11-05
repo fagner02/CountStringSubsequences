@@ -1,0 +1,183 @@
+class RepeatedValue {
+  int valor = 0;
+  int n = 0;
+  int valorAnterior = 0;
+};
+ 
+class Item {
+  int letra;
+  int anterior;
+  int valor;
+  int contador;
+  int code;
+}
+
+ultimo = null.
+para cada caractere da mainstring {
+  se o caractere nao existir no mapa {
+    adiciona o caractere no mapa com um contador igual a 1.
+  } caso contrario {
+    cria um novo item com a chave igual ao caractere somado ao valor do contador do primeiro
+    item com esse caractere multiplicado por 256.
+  }
+  o item criado é atribuido ao ultimo.
+}
+
+para cada caractere da mainstring {
+  para todos os caracteres do mapa igual ao caractere da mainstring {
+    soma o valor do item ao valor do item anterior.
+  }
+}
+
+retorna o valor do ultimo.
+
+
+int count(string main, string sub, int m, int n){
+  mapa = novo dicionario chave int e valor Item
+  previous = null
+ 
+  substringMap[-1] = novo Item com letra igual a -1 anterior igual a -2 e valor igual a 1
+ 
+  for (int i = 0; i < sub.length; i++) {
+    if (i == 0) {
+      previous = novo Item com a letra igual a sub na posição i e anterior igual a -1
+      substringMap[sub[i]] = previous
+      continue
+    }
+ 
+    se a letra anterior for igual a atual {
+ 	    incrementa o contador de repetição do anterior e recalcula o fatorial
+      continue
+    }
+ 
+    index = sub[i]
+    enquanto a index existir no mapa seu valor é incrementado em 256
+ 
+    previous = novo Item com letra igual a index e anterior igual a previous.letra
+    substringMap[index] = previous
+  }
+ 
+  for (int i = 0; i < main.length; i++) {
+    se main na posição i nao existir no mapa o loop pula para a proxima iteração
+ 
+    int index = main[i];
+    enquanto a index existir no mapa {
+      Item current = substringMap[index]
+      Item prev = substringMap[current.anterior]
+      index += 256
+
+      se a repetição de current for 1 o valor é incrementado em 1 e o laço pula para a próxima iteração
+      if (prev.getValue() <= 0) {
+        continue;
+      }
+ 
+      se i for 0 ou a letra anterior for igual a letra de current {
+        novoValor = novo RepeatedValue com valorAnterior = prev.getValue() e n = 0
+        o valorAnterior do novoValor é subtraído por todos os valores do vetor valores de current e 
+        novoValor é adicionado ao vetor;
+      }
+ 
+      para cada valor item em current.values {
+        o n do item é incrementado por 1 e o valor do item vai ser igual ao valorAnterior
+        multiplicado pela da combinação de n e da repetição
+      }
+    }
+  }
+para cada caractere da mainstring se ele existir no mapa:
+  se o item do mapa nao tiver repetição ele é incrementado em 1 e pula para a proxima iteração.
+  
+  return previous.getValue();
+}
+
+
+async function findSub(main: string, sub: string) {
+  let subMap: Map<number, item> = new Map();
+  let previous = null;
+  let rrr: number[] = [];
+  subMap.set(-1, new item(-1, -2, 1));
+  for (var i = 0; i < sub.length; i++) {
+    let charCodeAt: number = sub.charCodeAt(i);
+    if (i == 0) {
+      previous = new item(charCodeAt, -1);
+      previous.code = charCodeAt;
+      subMap.set(charCodeAt, previous);
+      continue;
+    }
+
+    if (previous!.code == charCodeAt) {
+      previous!.repeated++;
+      if (previous!.repeated == 2) {
+        rrr.push(previous!.letter);
+      }
+      continue;
+    }
+
+    let index: number = charCodeAt;
+    let last = subMap.get(index);
+    if (last != undefined) {
+      index = index + last!.count * 256;
+      last!.count++;
+    }
+
+    previous = new item(index, previous!.letter);
+    previous.code = charCodeAt;
+    subMap.set(index, previous);
+  }
+
+  for (let i = 0; i < rrr.length; i++) {
+    let item = subMap.get(rrr[i])!;
+    item.fat = calcLowerRepeated(item.repeated);
+  }
+
+  for (let i = 0; i < main.length; i++) {
+    var index = main.charCodeAt(i);
+    let current = subMap.get(index);
+    if (current == undefined) {
+      continue;
+    }
+    let initial = current.count;
+    for (let k = 0; k < initial; k++) {
+      let current = subMap.get(index)!;
+      let prev = subMap.get(current.prev)!;
+
+      index += 256;
+      if (current.repeated == 1) {
+        current.value += prev.getValue();
+        continue;
+      }
+      if (prev.getValue() <= 0) continue;
+      if (i == 0 || main.charCodeAt(i - 1) != current.code) {
+        let value = new repeatedValue();
+
+        value.n = 0;
+        value.backValue = prev.getValue();
+        for (let m = 0; m < current.values.length; m++) {
+          value.backValue -= current.values[m].backValue;
+        }
+        current.values.push(value);
+      }
+
+      for (let i = 0; i < current.values.length; i++) {
+        current.values[i].n++;
+        current.values[i].value =
+          (calcUpperRepeated(current.values[i].n, current.repeated) /
+            current.fat) *
+          current.values[i].backValue;
+      }
+    }
+  }
+  return previous!.getValue();
+}
+
+async function count(a: any, b: any, m: any, n: any): Promise<number> {
+  if (cancelOl) {
+    throw new Error("Canceled");
+  }
+  if (n == 0) return 1;
+
+  if (m == 0) return 0;
+
+  if (a[m - 1] == b[n - 1])
+    return (await count(a, b, m - 1, n - 1)) + (await count(a, b, m - 1, n));
+  else return count(a, b, m - 1, n);
+}
