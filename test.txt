@@ -1,10 +1,4 @@
-class RepeatedValue {
-  int valor = 0;
-  int n = 0;
-  int valorAnterior = 0;
-};
- 
-class Item {
+classe item {
   int letra;
   int anterior;
   int valor;
@@ -12,28 +6,48 @@ class Item {
   int code;
 }
 
-ultimo = null.
-para cada caractere da mainstring {
-  se o caractere nao existir no mapa {
-    adiciona o caractere no mapa com um contador igual a 1.
-  } caso contrario {
-    cria um novo item com a chave igual ao caractere somado ao valor do contador do primeiro
-    item com esse caractere multiplicado por 256.
+entrada: string mainstring, string substring, inteiro m tamanho da mainstring, inteiro n tamanho da substring.
+saída: inteiro positivo representando a qunatidade de vezes que a substring apareceu como subsequencia da mainstring 
+count(mainstring, substring, m, n) {  
+  variável dicionário = novo dicionário<inteiro, item>
+  variável anterior = null
+  dicionário[-1] = item com {code = -1, valor = 1} 
+  for(int i = 0; i < n; i++) {
+    variável index = substring[i]
+    se index for uma chave existente no dicionário {
+      variável contador = dicionário[index].contador
+      dicionário[index].contador = contador + 1
+      index = index + contador * 256
+    }
+    variável item
+    se i == 0 {
+      item = item com {letra = substring[i], code = index, valor = 0, contador = 1, anterior = -1}
+    } caso contrário {
+      item = item com {letra = substring[i], code = index, valor = 0, contador = 1, anterior = anterior.code}
+    }
+    anterior = item
+    dicionário[index] = item
   }
-  o item criado é atribuido ao ultimo.
-}
 
-para cada caractere da mainstring {
-  para todos os caracteres do mapa igual ao caractere da mainstring {
-    soma o valor do item ao valor do item anterior.
+  for(int i = 0; i < m; i++) {
+    variável valorAnterior = 0;
+    para todos os itens do dicionário com letra igual mainstring[i] {
+      variável novoValor = item.valor;
+      se item.letra == dicionário[item.anterior].letra {
+        item.valor = item.valor + valorAnterior;
+      } caso contrário {
+        item.valor = item.valor + dicionário[item.anterior].valor;
+      }
+      valorAnterior = novoValor;
+    }
   }
-}
 
-retorna o valor do ultimo.
+  retorna anterior.valor
+}
 
 
 int count(string main, string sub, int m, int n){
-  mapa = novo dicionario chave int e valor Item
+  dicionário = novo dicionário chave int e valor Item
   previous = null
  
   substringMap[-1] = novo Item com letra igual a -1 anterior igual a -2 e valor igual a 1
@@ -51,17 +65,17 @@ int count(string main, string sub, int m, int n){
     }
  
     index = sub[i]
-    enquanto a index existir no mapa seu valor é incrementado em 256
+    enquanto a index existir no dicionário seu valor é incrementado em 256
  
     previous = novo Item com letra igual a index e anterior igual a previous.letra
     substringMap[index] = previous
   }
  
   for (int i = 0; i < main.length; i++) {
-    se main na posição i nao existir no mapa o loop pula para a proxima iteração
+    se main na posição i nao existir no dicionário o loop pula para a proxima iteração
  
     int index = main[i];
-    enquanto a index existir no mapa {
+    enquanto a index existir no dicionário {
       Item current = substringMap[index]
       Item prev = substringMap[current.anterior]
       index += 256
@@ -83,8 +97,8 @@ int count(string main, string sub, int m, int n){
       }
     }
   }
-para cada caractere da mainstring se ele existir no mapa:
-  se o item do mapa nao tiver repetição ele é incrementado em 1 e pula para a proxima iteração.
+para cada caractere da mainstring se ele existir no dicionário:
+  se o item do dicionário nao tiver repetição ele é incrementado em 1 e pula para a proxima iteração.
   
   return previous.getValue();
 }

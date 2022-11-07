@@ -23,45 +23,22 @@ let done = true;
 let iteratorText = document.querySelector("p.iterator");
 let mainStringViewText = document.querySelector("p.main-string");
 let subStringViewText = document.querySelector("p.sub-string");
+let repeatedCharacterValueText = (document.querySelector("p.last-repeated-character"));
+let currentRepeatedCharacterValue = (document.querySelector("p.cur-repeated-character"));
 let mapItems = document.querySelector(".map-items").parentElement;
 let resultText1 = (document.querySelector(".find-view>.colored-box"));
 let subMapViewItems = [];
 let showingValues = false;
-function showValues() {
-    var values = document.querySelectorAll(".value-content:not(#values-1)");
-    if (showingValues) {
-        values.forEach((x) => {
-            var layers = x.querySelectorAll(".unit");
-            layers[1].style.height = "0px";
-            setTimeout(() => {
-                layers[1].style.display = "none";
-                layers[0].style.display = "flex";
-                layers[0].style.height = layers[0].scrollHeight + "px";
-            }, 500);
-        });
-        showingValues = false;
-        return;
-    }
-    values.forEach((x) => {
-        var layers = x.querySelectorAll(".unit");
-        layers[0].style.height = "0px";
-        setTimeout(() => {
-            layers[0].style.display = "none";
-            layers[1].style.display = "flex";
-            layers[1].style.height = layers[1].scrollHeight + "px";
-        }, 500);
-    });
-    showingValues = true;
-}
 function resetCountAggregateCalcView(mainString, subString) {
     document.querySelector(".map-items").remove();
-    var mapItems = document.createElement("div");
+    mapItems = document.createElement("div");
     mapItems.className = "map-items";
-    document.querySelector(".find-view>.border-box>div").prepend(mapItems);
+    document.querySelector(".find-view>.column>div").prepend(mapItems);
     subMapViewItems = [];
     i1 = 0;
     i2 = 0;
     i3 = 0;
+    repeatedCharacterValueText.innerText = "?";
     iteratorText.innerText = "?";
     resultText1.innerText = "result: ?";
     resultText1.style.backgroundColor = "hsl(0, 0%, 20%)";
@@ -81,108 +58,45 @@ function resetCountAggregateCalcView(mainString, subString) {
 function addMapItem(item) {
     var infobox = document.createElement("div");
     var content = document.createElement("div");
-    var infoLayer = document.createElement("div");
-    var valuesLayer = document.createElement("div");
     var letter = document.createElement("p");
     var prev = document.createElement("p");
-    var repeated = document.createElement("p");
-    var values = document.createElement("p");
+    var count = document.createElement("p");
+    var value = document.createElement("p");
     if (item.letter == -1) {
         letter.innerText = "first ";
-        values.innerText = "value: 1";
+        value.innerText = "value: 1";
     }
     else {
-        letter.innerText = String.fromCharCode(item.letter % 256);
-        prev.innerText = "previous: " + String.fromCharCode(item.prev % 256);
-        values.innerText = "value: " + item.value.toString();
+        letter.innerText =
+            String.fromCharCode(item.letter % 256) + " - " + item.letter.toString();
+        prev.innerText = "previous: " + item.prev;
+        value.innerText = "value: " + item.value.toString();
+        count.innerText =
+            "count: " + (subMapView.get(item.code).count - 1).toString();
     }
     if (item.prev == -1) {
         prev.innerText = "previous: first";
     }
     infobox.className = "border-box";
     infobox.id = "item" + item.letter;
-    content.className = "grid value-content";
+    content.className = "value-content";
     content.id = "values" + item.letter;
-    infoLayer.className = "unit";
-    valuesLayer.className = "unit";
-    infoLayer.appendChild(prev);
-    infoLayer.appendChild(repeated);
-    infoLayer.appendChild(values);
-    content.appendChild(infoLayer);
-    content.appendChild(valuesLayer);
+    content.appendChild(value);
+    content.appendChild(prev);
+    content.appendChild(count);
     infobox.appendChild(letter);
     infobox.appendChild(content);
-    document.querySelector(".map-items").appendChild(infobox);
-    if (content.scrollHeight > content.clientHeight) {
-        content.style.paddingRight = "5px";
-    }
-    else {
-        content.style.paddingRight = "0px";
-    }
-    if (item.letter == -1) {
-        return letter;
-    }
-    if (showingValues) {
-        infoLayer.style.display = "none";
-        valuesLayer.style.display = "flex";
-        infoLayer.style.height = "0px";
-        valuesLayer.style.height = valuesLayer.scrollHeight + "px";
-    }
-    else {
-        infoLayer.style.height = infoLayer.scrollHeight + "px";
-        valuesLayer.style.height = "0px";
-    }
+    mapItems.appendChild(infobox);
     return letter;
 }
-// function addRepeatedValueItem(repeated: repeatedValue, parent: HTMLElement) {
-//   var repeatedValue = document.createElement("div");
-//   var value = document.createElement("p");
-//   var n = document.createElement("p");
-//   var prev = document.createElement("p");
-//   value.innerText = "value: " + repeated.value.toString();
-//   n.innerText = "n: " + (repeated.n == -1 ? "?" : repeated.n.toString());
-//   prev.innerText = "previous item value: " + repeated.backValue.toString();
-//   repeatedValue.className = "border-box";
-//   repeatedValue.appendChild(value);
-//   repeatedValue.appendChild(n);
-//   repeatedValue.appendChild(prev);
-//   parent?.appendChild(repeatedValue);
-// }
 let highlightedItems = [];
 function updateMapItem(item) {
     var infobox = document.querySelector("#item" + item.letter);
     var idBox = infobox.querySelector("p");
-    var repeated = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p")[1];
-    var value = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div>p")[2];
+    var value = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".value-content>p")[0];
+    var count = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".value-content>p")[2];
     idBox.style.backgroundColor = "hsl(130, 55%, 45%)";
     value.innerText = "value: " + item.value.toString();
-    var valuesLayer = infobox === null || infobox === void 0 ? void 0 : infobox.querySelectorAll(".grid>div")[1];
-    var height = valuesLayer.scrollHeight;
-    valuesLayer.remove();
-    valuesLayer = document.createElement("div");
-    // item.values.forEach((x) => {
-    //   addRepeatedValueItem(x, valuesLayer);
-    // });
-    // if (item.repeated < 2) {
-    //   addRepeatedValueItem(
-    //     new repeatedValue(-1, subMapView.get(item.prev)?.getValue(), item.value),
-    //     valuesLayer
-    //   );
-    // }
-    // if (item.letter != -1 && valuesLayer.firstChild == null) {
-    //   addRepeatedValueItem(new repeatedValue(-1, 0, 0), valuesLayer);
-    // }
-    valuesLayer.style.display = showingValues ? "flex" : "none";
-    valuesLayer.style.height = height + "px";
-    valuesLayer.className = "unit";
-    var content = infobox === null || infobox === void 0 ? void 0 : infobox.querySelector(".grid");
-    content.appendChild(valuesLayer);
-    if (content.scrollHeight > content.clientHeight) {
-        content.style.paddingRight = "5px";
-    }
-    else {
-        content.style.paddingRight = "0px";
-    }
     return idBox;
 }
 function setMap() {
@@ -246,7 +160,7 @@ function setHighlightedItems(active, useResolveColor = true) {
 function scrollToItem(item) {
     let pos = item.offsetLeft - mapItems.offsetLeft - 10;
     let max = mapItems.scrollWidth - mapItems.offsetWidth;
-    mapItems.scrollTo({
+    mapItems.parentElement.scrollTo({
         behavior: "smooth",
         left: pos > max ? max : pos,
     });
@@ -254,6 +168,8 @@ function scrollToItem(item) {
 let initialCountAggregateView = 0;
 let indexAggregateView = 0;
 let lastAggregateView;
+let newLastAggregateView = 1;
+let firstBlue = false;
 function repeatedItemResolve() {
     if (i3 >= initialCountAggregateView) {
         resolvingRepeated = false;
@@ -262,7 +178,21 @@ function repeatedItemResolve() {
         return countAggregateCalcView();
     }
     let current = subMapView.get(indexAggregateView);
-    let newLast = current.value;
+    if (newLastAggregateView != -1) {
+        setHighlightedItems(false);
+        repeatedCharacterValueText.innerText = lastAggregateView.toString();
+        currentRepeatedCharacterValue.innerText = current.value.toString();
+        newLastAggregateView = -1;
+        repeatedCharacterValueText.style.backgroundColor = firstBlue
+            ? "hsl(250, 50%, 50%)"
+            : "hsl(200, 50%, 50%)";
+        currentRepeatedCharacterValue.style.backgroundColor = firstBlue
+            ? "hsl(200, 50%, 50%)"
+            : "hsl(250, 50%, 50%)";
+        firstBlue = !firstBlue;
+        return;
+    }
+    newLastAggregateView = current.value;
     let prev = subMapView.get(current.prev);
     if (current.code != prev.code) {
         current.value += prev.value;
@@ -270,12 +200,17 @@ function repeatedItemResolve() {
     else {
         current.value += lastAggregateView;
     }
-    lastAggregateView = newLast;
+    // repeatedCharacterValueText.innerText = newLastAggregateView.toString();
+    lastAggregateView = newLastAggregateView;
     indexAggregateView += 256;
     setHighlightedItems(false);
     highlightedItems.push(updateMapItem(current));
     setHighlightedItems(true);
     i3++;
+    if (i3 == initialCountAggregateView) {
+        repeatedCharacterValueText.style.backgroundColor = "hsl(0, 0%, 20%)";
+        currentRepeatedCharacterValue.style.backgroundColor = "hsl(0, 0%, 20%)";
+    }
 }
 function resolveFind(mainStringView) {
     if (!(i2 < mainStringView.length)) {
@@ -302,7 +237,9 @@ function resolveFind(mainStringView) {
     let current = subMapView.get(indexAggregateView);
     initialCountAggregateView = current.count;
     lastAggregateView = subMapView.get(current.prev).value;
+    newLastAggregateView = 1;
     resolvingRepeated = true;
+    firstBlue = false;
     repeatedItemResolve();
 }
 function countAggregateCalcView() {

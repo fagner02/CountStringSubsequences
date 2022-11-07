@@ -19,7 +19,7 @@ class item {
 }
 function findSub(main, sub) {
     return __awaiter(this, void 0, void 0, function* () {
-        let previous = null;
+        let previous;
         let subMap = {};
         subMap[-1] = new item(-1, -1, 1);
         for (var i = 0; i < sub.length; i++) {
@@ -30,10 +30,7 @@ function findSub(main, sub) {
                 index = index + last.count * 256;
                 last.count++;
             }
-            previous =
-                i == 0
-                    ? (previous = new item(charCodeAt, -1))
-                    : new item(index, previous.letter);
+            previous = i == 0 ? new item(index, -1) : new item(index, previous.letter);
             previous.code = charCodeAt;
             subMap[index] = previous;
         }
@@ -64,9 +61,6 @@ function findSub(main, sub) {
 }
 function count(a, b, m, n) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (cancelOl) {
-            throw new Error("Canceled");
-        }
         if (n == 0)
             return 1;
         if (m == 0)

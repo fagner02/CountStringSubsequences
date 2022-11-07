@@ -12,7 +12,7 @@ class item {
 }
 
 async function findSub(main: string, sub: string) {
-  let previous: item | null = null;
+  let previous: item;
   let subMap: any = {};
 
   subMap[-1] = new item(-1, -1, 1);
@@ -27,10 +27,7 @@ async function findSub(main: string, sub: string) {
       last!.count++;
     }
 
-    previous =
-      i == 0
-        ? (previous = new item(charCodeAt, -1))
-        : new item(index, previous!.letter);
+    previous = i == 0 ? new item(index, -1) : new item(index, previous!.letter);
     previous.code = charCodeAt;
 
     subMap[index] = previous;
@@ -61,9 +58,6 @@ async function findSub(main: string, sub: string) {
 }
 
 async function count(a: any, b: any, m: any, n: any): Promise<number> {
-  if (cancelOl) {
-    throw new Error("Canceled");
-  }
   if (n == 0) return 1;
 
   if (m == 0) return 0;
