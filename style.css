@@ -387,8 +387,7 @@ b {
 }
 
 .correctness > .grid > .unit:first-child {
-  opacity: 0;
-  z-index: -1;
+  display: none;
 }
 
 div::-webkit-scrollbar {

@@ -61,7 +61,7 @@ let timeout: Map<string, number[]> = new Map([["countStep", []]]);
 
 function openRecursiveCorrectness() {
   let units = <HTMLElement[]>(
-    (<any>document.querySelector(".correctness > .grid > .unit"))
+    (<any>document.querySelectorAll(".correctness > .grid > .unit"))
   );
   let buttons = <HTMLElement[]>(
     (<any>document.querySelector(".correctness > .controls")?.children)
@@ -74,7 +74,7 @@ function openRecursiveCorrectness() {
 
 function openIterativeCorrectness() {
   let units = <HTMLElement[]>(
-    (<any>document.querySelector(".correctness > .grid > .unit"))
+    (<any>document.querySelectorAll(".correctness > .grid > .unit"))
   );
   let buttons = <HTMLElement[]>(
     (<any>document.querySelector(".correctness > .controls")?.children)

@@ -59,7 +59,7 @@ let resultThree = document.querySelectorAll(".result-three > p");
 let timeout = new Map([["countStep", []]]);
 function openRecursiveCorrectness() {
     var _a;
-    let units = document.querySelector(".correctness > .grid > .unit");
+    let units = document.querySelectorAll(".correctness > .grid > .unit");
     let buttons = (_a = document.querySelector(".correctness > .controls")) === null || _a === void 0 ? void 0 : _a.children;
     buttons[0].style.backgroundColor = "hsl(200, 50%, 50%)";
     buttons[1].style.backgroundColor = "hsl(0, 0%, 20%)";
@@ -68,7 +68,7 @@ function openRecursiveCorrectness() {
 }
 function openIterativeCorrectness() {
     var _a;
-    let units = document.querySelector(".correctness > .grid > .unit");
+    let units = document.querySelectorAll(".correctness > .grid > .unit");
     let buttons = (_a = document.querySelector(".correctness > .controls")) === null || _a === void 0 ? void 0 : _a.children;
     buttons[1].style.backgroundColor = "hsl(200, 50%, 50%)";
     buttons[0].style.backgroundColor = "hsl(0, 0%, 20%)";
