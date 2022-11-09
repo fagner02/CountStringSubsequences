@@ -28,7 +28,7 @@ function resetCountDynamic(main: string, sub: string) {
   dynamicTable.style.gridTemplateRows = `repeat(${main.length + 2}, 1fr)`;
 
   table.appendChild(dynamicTable);
-  document.querySelector(".dynamic-view")?.append(table);
+  document.querySelector(".dynamic-view>div:last-child")?.append(table);
 
   mainStringCountDynamic = main;
   subStringCountDynamic = sub;
@@ -48,7 +48,7 @@ function resetCountDynamic(main: string, sub: string) {
   table.append(firstCell);
   for (let i = 0; i < main.length + 1; i++) {
     let letter = document.createElement("div") as HTMLElement;
-    letter.className = "cell";
+    letter.className = "cell letter-cell";
     letter.innerText = i == 0 ? " " : main[i - 1];
     letter.style.gridColumn = `1`;
     letter.style.gridRow = `${i + 3}`;
@@ -63,7 +63,7 @@ function resetCountDynamic(main: string, sub: string) {
   }
   for (let i = 0; i < sub.length + 1; i++) {
     let letter = document.createElement("div") as HTMLElement;
-    letter.className = "";
+    letter.className = "cell letter-cell";
     letter.innerText = i == 0 ? " " : sub[i - 1];
     letter.style.gridColumn = `${i + 3}`;
     letter.style.gridRow = `1`;
@@ -183,7 +183,7 @@ function countDynamic(): any {
 
     highlightedCells.push(
       document.querySelector(
-        `#cell-${i2Dynamic}-${i1Dynamic - 1}`
+        `#cell-${i2Dynamic + 2}-${i1Dynamic + 1}`
       ) as HTMLElement
     );
   }

@@ -406,6 +406,7 @@ b {
   display: grid;
   width: fit-content;
   gap: 5px;
+  margin-bottom: 1px;
 }
 
 .dynamic-table-values {
@@ -413,15 +414,6 @@ b {
   padding: 0;
   background-color: white;
   gap: 5px;
-}
-
-.dynamic-table > div:not(.dynamic-table-values) {
-  /* border: 1px solid black; */
-  background-color: white;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .cell {
@@ -437,8 +429,21 @@ b {
   color: white;
 }
 
+.letter-cell {
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
 .label-cell {
   background-color: hsl(0, 0%, 60%);
+  position: sticky;
+  top: 0;
+
   /* color: hsl(0, 0%, 20%); */
 }
 

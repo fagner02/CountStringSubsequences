@@ -21,7 +21,7 @@ function resetCountDynamic(main, sub) {
     dynamicTable.style.gridTemplateColumns = `repeat(${sub.length + 2}, 1fr)`;
     dynamicTable.style.gridTemplateRows = `repeat(${main.length + 2}, 1fr)`;
     table.appendChild(dynamicTable);
-    (_a = document.querySelector(".dynamic-view")) === null || _a === void 0 ? void 0 : _a.append(table);
+    (_a = document.querySelector(".dynamic-view>div:last-child")) === null || _a === void 0 ? void 0 : _a.append(table);
     mainStringCountDynamic = main;
     subStringCountDynamic = sub;
     let firstCell = document.createElement("div");
@@ -38,7 +38,7 @@ function resetCountDynamic(main, sub) {
     table.append(firstCell);
     for (let i = 0; i < main.length + 1; i++) {
         let letter = document.createElement("div");
-        letter.className = "cell";
+        letter.className = "cell letter-cell";
         letter.innerText = i == 0 ? " " : main[i - 1];
         letter.style.gridColumn = `1`;
         letter.style.gridRow = `${i + 3}`;
@@ -53,7 +53,7 @@ function resetCountDynamic(main, sub) {
     }
     for (let i = 0; i < sub.length + 1; i++) {
         let letter = document.createElement("div");
-        letter.className = "";
+        letter.className = "cell letter-cell";
         letter.innerText = i == 0 ? " " : sub[i - 1];
         letter.style.gridColumn = `${i + 3}`;
         letter.style.gridRow = `1`;
@@ -149,7 +149,7 @@ function countDynamic() {
     }
     else {
         lookup[i1Dynamic][i2Dynamic] = lookup[i1Dynamic - 1][i2Dynamic];
-        highlightedCells.push(document.querySelector(`#cell-${i2Dynamic}-${i1Dynamic - 1}`));
+        highlightedCells.push(document.querySelector(`#cell-${i2Dynamic + 2}-${i1Dynamic + 1}`));
     }
     if (highlightedResultCell != null) {
         highlightedResultCell.style.backgroundColor = "hsl(0, 0%, 20%)";
