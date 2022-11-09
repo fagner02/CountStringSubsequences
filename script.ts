@@ -96,6 +96,7 @@ function openIterativeCorrectness() {
     let resultBox = <HTMLElement>document.querySelector(".result-box");
     let countView = <HTMLElement>document.querySelector(".count-view");
     let findView = <HTMLElement>document.querySelector(".find-view");
+    let dynamicView = <HTMLElement>document.querySelector(".dynamic-view");
     let introduction = <HTMLElement>document.querySelector(".introduction");
     let correctness = <HTMLElement>document.querySelector(".correctness");
 
@@ -133,6 +134,17 @@ function openIterativeCorrectness() {
     } else {
       findView.style.opacity = "0";
       findView.style.zIndex = "-1";
+    }
+
+    if (x.innerText == "Dynamic-Code") {
+      dynamicView.style.opacity = "1";
+      dynamicView.style.zIndex = "1";
+      if (startCountDynamicView) {
+        resetCountDynamic(main, sub);
+      }
+    } else {
+      dynamicView.style.opacity = "0";
+      dynamicView.style.zIndex = "-1";
     }
 
     if (x.innerText == "Correctness") {
@@ -206,13 +218,12 @@ async function setOldResult(main: string, sub: string) {
   for (let i = 0; i < 100; i++) {
     var start = performance.now();
 
-    try {
-      (<HTMLElement>resultsOl[1]).innerText = `result: ${(
-        await count(main, sub, main.length, sub.length)
-      ).toString()}`;
-    } catch {
-      return;
-    }
+    (<HTMLElement>resultsOl[1]).innerText = `result: ${count(
+      main,
+      sub,
+      main.length,
+      sub.length
+    ).toString()}`;
 
     var end = performance.now();
     sum += end - start;
@@ -257,14 +268,14 @@ function stringToCodeBlock(
       }
       closeIndex--;
 
-      let newstr = str.slice(end + 1, closeIndex);
+      let newStr = str.slice(end + 1, closeIndex);
       if (!sameLine) {
         parent.insertAdjacentText("beforeend", str.slice(index, end));
       }
       if (str[str.indexOf("\n", closeIndex) - 1] == "{") {
         sameLine = true;
       }
-      stringToCodeBlock(div, newstr, sameLine);
+      stringToCodeBlock(div, newStr, sameLine);
       parent.insertAdjacentElement("beforeend", div);
       parent.insertAdjacentText(
         "beforeend",

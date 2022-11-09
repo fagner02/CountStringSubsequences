@@ -11,7 +11,7 @@ class item {
   }
 }
 
-async function findSub(main: string, sub: string) {
+function findSub(main: string, sub: string) {
   let previous: item;
   let subMap: any = {};
 
@@ -57,12 +57,33 @@ async function findSub(main: string, sub: string) {
   return previous!.value;
 }
 
-async function count(a: any, b: any, m: any, n: any): Promise<number> {
+function countDynamicPrograming(a: string, b: string) {
+  var m = a.length;
+  var n = b.length;
+
+  var lookup = Array(m + 1);
+  for (var i = 0; i < m + 1; i++) lookup[i] = Array(n + 1).fill(0);
+
+  for (i = 0; i <= n; ++i) lookup[0][i] = 0;
+
+  for (i = 0; i <= m; ++i) lookup[i][0] = 1;
+
+  for (i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a.charAt(i - 1) == b.charAt(j - 1))
+        lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j];
+      else lookup[i][j] = lookup[i - 1][j];
+    }
+  }
+  return lookup[m][n];
+}
+
+function count(a: any, b: any, m: any, n: any): number {
   if (n == 0) return 1;
 
   if (m == 0) return 0;
 
   if (a[m - 1] == b[n - 1])
-    return (await count(a, b, m - 1, n - 1)) + (await count(a, b, m - 1, n));
+    return count(a, b, m - 1, n - 1) + count(a, b, m - 1, n);
   else return count(a, b, m - 1, n);
 }

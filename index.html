@@ -15,7 +15,8 @@
     <script src="maps/countView.js" defer></script>
     <script src="maps/algorithms.js" defer></script>
     <script src="maps/findView.js" defer></script>
-    <script src="maps/three.js"></script>
+    <script src="maps/three.js" defer></script>
+    <script src="maps/countDynamic.js" defer></script>
   </head>
   <body>
     <div class="pop-up">
@@ -34,12 +35,13 @@
           <p class="option">Introduction</p>
           <p class="option">Visualize-Recursive-Code</p>
           <p class="option">Visualize-Iterative-Code</p>
+          <p class="option">Dynamic-Code</p>
           <p class="option">Correctness</p>
           <p class="option">Results</p>
         </div>
       </div>
     </div>
-    <div class="text border-box">
+    <div class="text border-box column">
       <div>
         <p>main string:</p>
         <input id="main" />
@@ -62,18 +64,29 @@
           Encontrar o número de vezes que uma substring aparece como
           subsequência de uma string
         </h1>
-        <div>
-          <p class="colored-box">Entrada:</p>
-          <p>
-            uma string mainstring representando a string principal na qual as
-            subsequencias vão ser procuradas
-          </p>
-          <p>
-            uma string substring representando a string que vai ser procurada
-            como subsequencia da string principal
-          </p>
-          <p>um inteiro m representando o tamanho da mainstring</p>
-          <p>um inteiro n representando o tamanho da substring</p>
+        <div class="params-grid">
+          <div class="input">
+            <p class="colored-box">Entrada:</p>
+          </div>
+          <div class="column input-value">
+            <p>
+              uma string mainstring representando a string principal na qual as
+              subsequencias vão ser procuradas
+            </p>
+            <p>
+              uma string substring representando a string que vai ser procurada
+              como subsequencia da string principal
+            </p>
+            <p>um inteiro m representando o tamanho da mainstring</p>
+            <p>um inteiro n representando o tamanho da substring</p>
+          </div>
+          <div class="output"><p class="colored-box">Saida:</p></div>
+          <div class="column output-value">
+            <p>
+              Um inteiro representando a quantidade de vezes que a substring
+              aparece como subsequencia da mainstring
+            </p>
+          </div>
         </div>
         <p>
           O objetivo do problema é encontrar o número de vezes que uma substring
@@ -84,7 +97,7 @@
           a ser procurada “eu”, a saída esperada é 4 pois as letras da substring
           “eu” aparecem em sequência 4 vezes na string principal.
         </p>
-        <div class="example-box">
+        <div class="example-box column">
           <p class="colored-box"><b>eu</b> programo e eu amo isso</p>
           <p class="colored-box"><b>e</b>u programo e e<b>u</b> amo isso</p>
           <p class="colored-box">eu programo <b>e</b> e<b>u</b> amo isso</p>
@@ -127,7 +140,7 @@
           </div>
         </div>
       </div>
-      <div class="count-view unit">
+      <div class="count-view unit column">
         <div class="controls">
           <button
             onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
@@ -138,7 +151,7 @@
         <p class="colored-box">result: ?</p>
         <div class="recursive-tree"></div>
       </div>
-      <div class="find-view unit">
+      <div class="find-view unit column">
         <div class="controls">
           <button
             onclick="resetCountAggregateCalcView(inputMain.value, inputSub.value)">
@@ -171,6 +184,17 @@
             <p>i:</p>
             <p class="iterator colored-box"></p>
           </div>
+        </div>
+      </div>
+      <div class="dynamic-view unit column">
+        <div class="controls">
+          <button onclick="resetCountDynamic(inputMain.value,inputSub.value)">
+            reset
+          </button>
+          <button onclick="countDynamic()">next</button>
+        </div>
+        <div class="dynamic-table">
+          <div class="dynamic-table-values"></div>
         </div>
       </div>
     </div>

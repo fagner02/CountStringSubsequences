@@ -86,6 +86,7 @@ document.querySelectorAll("p.option").forEach((x) => {
         let resultBox = document.querySelector(".result-box");
         let countView = document.querySelector(".count-view");
         let findView = document.querySelector(".find-view");
+        let dynamicView = document.querySelector(".dynamic-view");
         let introduction = document.querySelector(".introduction");
         let correctness = document.querySelector(".correctness");
         if (x.innerText == "Introduction" || x.innerText == "Correctness") {
@@ -123,6 +124,17 @@ document.querySelectorAll("p.option").forEach((x) => {
         else {
             findView.style.opacity = "0";
             findView.style.zIndex = "-1";
+        }
+        if (x.innerText == "Dynamic-Code") {
+            dynamicView.style.opacity = "1";
+            dynamicView.style.zIndex = "1";
+            if (startCountDynamicView) {
+                resetCountDynamic(main, sub);
+            }
+        }
+        else {
+            dynamicView.style.opacity = "0";
+            dynamicView.style.zIndex = "-1";
         }
         if (x.innerText == "Correctness") {
             correctness.style.opacity = "1";
@@ -189,12 +201,7 @@ function setOldResult(main, sub) {
         var sum = 0;
         for (let i = 0; i < 100; i++) {
             var start = performance.now();
-            try {
-                resultsOl[1].innerText = `result: ${(yield count(main, sub, main.length, sub.length)).toString()}`;
-            }
-            catch (_a) {
-                return;
-            }
+            resultsOl[1].innerText = `result: ${count(main, sub, main.length, sub.length).toString()}`;
             var end = performance.now();
             sum += end - start;
             resultsOl[0].innerText = `batch item: ${i.toString()}`;
@@ -228,14 +235,14 @@ function stringToCodeBlock(parent, str, sameLine = false) {
                 }
             }
             closeIndex--;
-            let newstr = str.slice(end + 1, closeIndex);
+            let newStr = str.slice(end + 1, closeIndex);
             if (!sameLine) {
                 parent.insertAdjacentText("beforeend", str.slice(index, end));
             }
             if (str[str.indexOf("\n", closeIndex) - 1] == "{") {
                 sameLine = true;
             }
-            stringToCodeBlock(div, newstr, sameLine);
+            stringToCodeBlock(div, newStr, sameLine);
             parent.insertAdjacentElement("beforeend", div);
             parent.insertAdjacentText("beforeend", str.slice(closeIndex, str.indexOf("\n", closeIndex)));
             parent.insertAdjacentElement("beforeend", document.createElement("br"));

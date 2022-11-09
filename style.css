@@ -2,6 +2,17 @@
   font-family: "Roboto Mono";
 }
 
+.flex {
+  display: flex;
+  gap: 5px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .pop-up {
   position: absolute;
   display: none;
@@ -161,9 +172,7 @@ input {
 }
 .text {
   display: none;
-  flex-direction: column;
   margin: 10px 0px;
-  gap: 5px;
 }
 
 .result-op > p,
@@ -201,10 +210,7 @@ button:active {
 }
 
 .count-view {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  gap: 5px;
   align-content: flex-start;
   opacity: 0;
   z-index: -1;
@@ -260,12 +266,9 @@ b {
 }
 
 .find-view {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
   z-index: -1;
   opacity: 0;
-  gap: 5px;
 }
 
 .value-content {
@@ -293,14 +296,6 @@ b {
   margin-bottom: 5px;
 }
 
-.find-view > .border-box {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  width: -webkit-fill-available;
-  width: -moz-available;
-}
-
 .controls {
   display: flex;
   gap: 5px;
@@ -311,12 +306,6 @@ b {
   transition: all 0.3s;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
 .introduction {
   z-index: 1;
   height: -webkit-fill-available;
@@ -324,29 +313,47 @@ b {
   max-width: 1000px;
 }
 
-.introduction > div:nth-child(2) {
-  display: flex;
+.params-grid {
+  display: grid;
   gap: 5px;
-  flex-direction: column;
+}
+.input {
+  grid-column: 1;
+  grid-row: 1;
+}
+.output {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: 10px;
+}
+
+.output-value {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 10px;
+}
+
+.input-value {
+  grid-column: 2;
+  grid-row: 1;
+}
+.input-value > p,
+.output-value > p {
+  background-color: hsl(200, 20%, 60%);
+  color: white;
+  /* box-shadow: 0 0 10px hsl(0 0% 0% / 50%); */
+  margin-right: 10px;
   /* border: 1px solid black; */
-  border-radius: 8px;
-}
-.introduction > div:nth-child(2) > p > b {
-  height: -webkit-fill-available;
-  margin: -5px 0;
-}
-.introduction > div:nth-child(2) > p {
-  /* background-color: hsl(0, 0%, 20%);
-  color: white; */
-  border: 1px solid black;
   border-radius: 5px;
 }
 
+.input > p,
+.output > p {
+  width: auto;
+}
+
 .example-box {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  gap: 5px;
   margin: 10px;
 }
 
@@ -388,6 +395,56 @@ b {
 
 .correctness > .grid > .unit:first-child {
   display: none;
+}
+
+.dynamic-view {
+  opacity: 0;
+  z-index: -1;
+}
+
+.dynamic-table {
+  display: grid;
+  width: fit-content;
+  gap: 5px;
+}
+
+.dynamic-table-values {
+  display: grid;
+  padding: 0;
+  background-color: white;
+  gap: 5px;
+}
+
+.dynamic-table > div:not(.dynamic-table-values) {
+  /* border: 1px solid black; */
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell {
+  background-color: hsl(0, 0%, 20%);
+  padding: 5px;
+  border-radius: 5px;
+  min-height: 1.32rem;
+  min-width: 1.32rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.label-cell {
+  background-color: hsl(0, 0%, 60%);
+  /* color: hsl(0, 0%, 20%); */
+}
+
+.first-cell {
+  background-color: hsl(0, 0%, 30%);
+  color: white;
 }
 
 div::-webkit-scrollbar {
