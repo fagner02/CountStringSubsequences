@@ -1,7 +1,4 @@
-function three(a: string, b: string) {
-  var m = a.length;
-  var n = b.length;
-
+function three(a: string, b: string, m: number, n: number) {
   var lookup = Array(m + 1);
   for (var i = 0; i < m + 1; i++) lookup[i] = Array(n + 1).fill(0);
 

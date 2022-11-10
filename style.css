@@ -310,12 +310,13 @@ b {
   z-index: 1;
   height: -webkit-fill-available;
   height: -moz-available;
-  max-width: 1000px;
+  overflow-y: auto;
 }
 
 .params-grid {
   display: grid;
   gap: 5px;
+  margin-left: 10px;
 }
 .input {
   grid-column: 1;
@@ -381,6 +382,7 @@ b {
   padding-left: 20px;
   border-left: 1px solid hsl(0, 0%, 20%);
 }
+
 .correctness-highlight {
   background-color: hsl(120, 50%, 50%);
   color: white;
@@ -443,8 +445,6 @@ b {
   background-color: hsl(0, 0%, 60%);
   position: sticky;
   top: 0;
-
-  /* color: hsl(0, 0%, 20%); */
 }
 
 .first-cell {

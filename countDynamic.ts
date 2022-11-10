@@ -36,15 +36,17 @@ function resetCountDynamic(main: string, sub: string) {
   let firstCell = document.createElement("div");
   firstCell.className = "cell";
   firstCell.style.gridColumn = "1";
-  firstCell.style.gridRow = "1";
-  firstCell.style.backgroundColor = "transparent";
-  dynamicTable.append(firstCell);
+  firstCell.style.gridRow = "2";
+  firstCell.innerText = "m";
+  // firstCell.style.backgroundColor = "transparent";
+  table.append(firstCell);
 
   firstCell = document.createElement("div");
   firstCell.className = "cell";
-  firstCell.style.gridColumn = "1";
+  firstCell.style.gridColumn = "2";
   firstCell.style.gridRow = "1";
-  firstCell.style.backgroundColor = "transparent";
+  firstCell.innerText = "n";
+  // firstCell.style.backgroundColor = "transparent";
   table.append(firstCell);
   for (let i = 0; i < main.length + 1; i++) {
     let letter = document.createElement("div") as HTMLElement;

@@ -33,8 +33,8 @@
         <div class="highlight"></div>
         <div class="cells">
           <p class="option">Introduction</p>
-          <p class="option">Visualize-Recursive-Code</p>
-          <p class="option">Visualize-Iterative-Code</p>
+          <p class="option">Recursive-Code</p>
+          <!-- <p class="option">Iterative-Code</p> -->
           <p class="option">Dynamic-Code</p>
           <p class="option">Correctness</p>
           <p class="option">Results</p>
@@ -54,8 +54,12 @@
     <div class="grid">
       <div class="correctness unit column">
         <div class="controls">
+          <button
+            style="background-color: hsl(200, 50%, 50%)"
+            onclick="openIterativeCorrectness()">
+            Dynamic
+          </button>
           <button onclick="openRecursiveCorrectness()">Recursive</button>
-          <button onclick="openIterativeCorrectness()">Iterative</button>
         </div>
         <div class="grid border-box"></div>
       </div>
@@ -89,10 +93,6 @@
           </div>
         </div>
         <p>
-          O objetivo do problema é encontrar o número de vezes que uma substring
-          aparece como subsequência de uma string principal.
-        </p>
-        <p>
           Para uma string principal “eu programo e eu amo isso” e uma substring
           a ser procurada “eu”, a saída esperada é 4 pois as letras da substring
           “eu” aparecem em sequência 4 vezes na string principal.
@@ -106,11 +106,6 @@
         <p>
           As letras em negrito acima podem ajudar a visualizar as sequências das
           letras de “eu”.
-        </p>
-        <p>
-          É importante notar que o algoritmo é case-sensitive portanto se a
-          substring fosse “Eu” haveria 0 ocorrências de subsequências na string
-          principal.
         </p>
       </div>
       <div class="result-box unit">

@@ -61,8 +61,8 @@ function openRecursiveCorrectness() {
     var _a;
     let units = document.querySelectorAll(".correctness > .grid > .unit");
     let buttons = (_a = document.querySelector(".correctness > .controls")) === null || _a === void 0 ? void 0 : _a.children;
-    buttons[0].style.backgroundColor = "hsl(200, 50%, 50%)";
-    buttons[1].style.backgroundColor = "hsl(0, 0%, 20%)";
+    buttons[1].style.backgroundColor = "hsl(200, 50%, 50%)";
+    buttons[0].style.backgroundColor = "hsl(0, 0%, 20%)";
     units[0].style.display = "flex";
     units[1].style.display = "none";
 }
@@ -70,11 +70,12 @@ function openIterativeCorrectness() {
     var _a;
     let units = document.querySelectorAll(".correctness > .grid > .unit");
     let buttons = (_a = document.querySelector(".correctness > .controls")) === null || _a === void 0 ? void 0 : _a.children;
-    buttons[1].style.backgroundColor = "hsl(200, 50%, 50%)";
-    buttons[0].style.backgroundColor = "hsl(0, 0%, 20%)";
+    buttons[0].style.backgroundColor = "hsl(200, 50%, 50%)";
+    buttons[1].style.backgroundColor = "hsl(0, 0%, 20%)";
     units[1].style.display = "flex";
     units[0].style.display = "none";
 }
+let correctnessOpened = false;
 document.querySelectorAll("p.option").forEach((x) => {
     x.addEventListener("click", () => {
         var _a, _b;
@@ -103,7 +104,7 @@ document.querySelectorAll("p.option").forEach((x) => {
             introduction.style.opacity = "0";
             introduction.style.zIndex = "-1";
         }
-        if (x.innerText == "Visualize-Recursive-Code") {
+        if (x.innerText == "Recursive-Code") {
             countView.style.opacity = "1";
             countView.style.zIndex = "1";
             if (startCountRecursiveView) {
@@ -114,7 +115,7 @@ document.querySelectorAll("p.option").forEach((x) => {
             countView.style.opacity = "0";
             countView.style.zIndex = "-1";
         }
-        if (x.innerText == "Visualize-Iterative-Code") {
+        if (x.innerText == "Iterative-Code") {
             findView.style.opacity = "1";
             findView.style.zIndex = "1";
             if (start) {
@@ -139,18 +140,21 @@ document.querySelectorAll("p.option").forEach((x) => {
         if (x.innerText == "Correctness") {
             correctness.style.opacity = "1";
             correctness.style.zIndex = "1";
-            (_a = document.querySelector(".correctness > .grid")) === null || _a === void 0 ? void 0 : _a.remove();
-            let grid = document.createElement("div");
-            grid.className = "grid border-box";
-            let unit1 = document.createElement("div");
-            unit1.className = "unit column";
-            let unit2 = document.createElement("div");
-            unit2.className = "unit column";
-            grid.appendChild(unit1);
-            grid.appendChild(unit2);
-            (_b = document.querySelector(".correctness")) === null || _b === void 0 ? void 0 : _b.appendChild(grid);
-            stringToCodeBlock(unit1, recursiveCorrectness);
-            stringToCodeBlock(unit2, iterativeCorrectness);
+            if (!correctnessOpened) {
+                (_a = document.querySelector(".correctness > .grid")) === null || _a === void 0 ? void 0 : _a.remove();
+                let grid = document.createElement("div");
+                grid.className = "grid border-box";
+                let unit1 = document.createElement("div");
+                unit1.className = "unit column";
+                let unit2 = document.createElement("div");
+                unit2.className = "unit column";
+                grid.appendChild(unit1);
+                grid.appendChild(unit2);
+                (_b = document.querySelector(".correctness")) === null || _b === void 0 ? void 0 : _b.appendChild(grid);
+                stringToCodeBlock(unit1, recursiveCorrectness);
+                stringToCodeBlock(unit2, dynamicCorrectness);
+                correctnessOpened = true;
+            }
         }
         else {
             correctness.style.opacity = "0";
@@ -313,7 +317,26 @@ count(mainstring, substring, m, n) {
   retorna anterior.valor
 }
 `;
-let recursiveCorrectness = `count(a, b, m, n){
+let dynamicCorrectness = `count(mainstring, substring, m, n) {
+  variável lookup = matriz de inteiro com dimensões [m+1][n+1]
+ 
+  for (i = 0; i <= n; ++i) lookup[0][i] = 0
+ 
+  for (i = 0; i <= m; ++i) lookup[i][0] = 1
+ 
+  for (i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      se mainstring[i - 1] é igual a substring[j - 1] {
+        lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j];
+      } caso contrario {
+        lookup[i][j] = lookup[i - 1][j]
+      } 
+    }
+  }
+  retorna lookup[m][n]
+}
+`;
+let recursiveCorrectness = `count(mainstring, substring, m, n){
   se n é igual a 0 {
     |gCaso base, se n for 0, uma sequência completa da substring foi encontrada na mainstring portanto retorna 1.
     retorne 1
@@ -324,11 +347,11 @@ let recursiveCorrectness = `count(a, b, m, n){
   }
   se a[m - 1] é igual a b[n - 1] {
     |gCobre as duas possibilidades de continuar com uma sequência e começar uma nova.
-    retorne count(a, b, m - 1, n - 1) + count(a, b, m - 1, n)
+    retorne count(mainstring, substring, m - 1, n - 1) + count(mainstring, substring, m - 1, n)
   }
   caso contrário { 
     |gJá que os caracteres não são iguais, não existe continuação da sequência, portanto apenas cobre a possibilidade de começar uma nova sequência.
-    retorne count(a, b, m - 1, n)
+    retorne count(mainstring, substring, m - 1, n)
   }
 }
 `;
