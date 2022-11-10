@@ -75,6 +75,9 @@ body {
   height: -moz-available;
   display: flex;
   flex-direction: column;
+  /* background-color: hsl(220, 50%, 20%); */
+  /* background-image: url("/star.png"); */
+  background-size: 400px;
 }
 
 body {
@@ -311,6 +314,8 @@ b {
   height: -webkit-fill-available;
   height: -moz-available;
   overflow-y: auto;
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
 }
 
 .params-grid {
@@ -381,6 +386,9 @@ b {
 .ident {
   padding-left: 20px;
   border-left: 1px solid hsl(0, 0%, 20%);
+}
+.ident > p {
+  padding: 0;
 }
 
 .correctness-highlight {

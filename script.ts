@@ -1,6 +1,12 @@
 let highlight: HTMLElement = document.querySelector(".highlight")!;
 let highlightSelected = <HTMLElement>document.querySelector("p");
 
+let highlightColors: any = {
+  "0": "black",
+  "1": "hsl(350, 55%, 55%)",
+  "2": "hsl(210, 55%, 55%)",
+};
+
 function setHighlight() {
   highlight.style.opacity = "1";
   highlight.style.top = highlightSelected.offsetTop + "px";
@@ -291,10 +297,27 @@ function stringToCodeBlock(
       div.className = "ident";
       end = closeIndex + 1;
     } else {
-      div.innerText = str
+      var colored = str
         .slice(index, end)
         .replace(/\|o/g, "{")
         .replace(/\|c/g, "}");
+      var p = document.createElement("p");
+      while (true) {
+        let cIndex = colored.indexOf("|ç");
+        var b = document.createElement("b");
+        b.innerText = colored.slice(0, cIndex);
+        b.style.color = highlightColors[colored[cIndex + 2]];
+        p.appendChild(b);
+        if (cIndex == -1) {
+          break;
+        }
+        colored = colored.slice(colored.indexOf("|ç") + 3);
+        if (colored.length == 0) {
+          break;
+        }
+      }
+      div.appendChild(p);
+      // div.innerText = str;
 
       if (div.innerText == " ") {
         parent.insertAdjacentElement("beforeend", document.createElement("br"));
@@ -302,7 +325,7 @@ function stringToCodeBlock(
         if (div.innerText.includes("|g")) {
           div.className = "correctness-highlight";
         }
-        div.innerText = div.innerText.replace(/\|g/g, "");
+        // div.innerText = div.innerText.replace(/\|g/g, "");
         parent.insertAdjacentElement("beforeend", div);
       }
     }
@@ -356,7 +379,7 @@ count(mainstring, substring, m, n) {
 }
 `;
 
-let dynamicCorrectness = `count(mainstring, substring, m, n) {
+let dynamicCorrectness = `count|ç1(|ç0mainstring|ç2,|ç0 substring|ç2,|ç0 m|ç2,|ç0 n|ç2) {|ç0
   variável lookup = matriz de inteiro com dimensões [m+1][n+1]
  
   for (i = 0; i <= n; ++i) lookup[0][i] = 0
@@ -387,7 +410,8 @@ let recursiveCorrectness = `count(mainstring, substring, m, n){
   }
   se a[m - 1] é igual a b[n - 1] {
     |gCobre as duas possibilidades de continuar com uma sequência e começar uma nova.
-    retorne count(mainstring, substring, m - 1, n - 1) + count(mainstring, substring, m - 1, n)
+    retorne count(mainstring, substring, m - 1, n - 1) + 
+            count(mainstring, substring, m - 1, n)
   }
   caso contrário { 
     |gJá que os caracteres não são iguais, não existe continuação da sequência, portanto apenas cobre a possibilidade de começar uma nova sequência.
