@@ -3,27 +3,16 @@ let highlightSelected = <HTMLElement>document.querySelector("p");
 
 let highlightColors: any = {
   "0": "black",
-  "1": "hsl(350, 55%, 55%)",
-  "2": "hsl(210, 55%, 55%)",
+  "1": "hsl(350, 65%, 45%)",
+  "2": "hsl(210, 50%, 40%)",
+  "3": "hsl(140, 55%, 40%)",
 };
 
 function setHighlight() {
   highlight.style.opacity = "1";
   highlight.style.top = highlightSelected.offsetTop + "px";
   highlight.style.width = highlightSelected.offsetWidth + "px";
-  highlight.style.height = highlightSelected.offsetHeight + "px";
   highlight.style.left = highlightSelected.offsetLeft + "px";
-
-  var infoboxes = <HTMLElement[]>(
-    (<any>document.querySelectorAll(".map-items>div>div"))
-  );
-  infoboxes.forEach((infobox) => {
-    if (infobox.scrollHeight > infobox.clientHeight) {
-      infobox.style.paddingRight = "5px";
-    } else {
-      infobox.style.paddingRight = "0px";
-    }
-  });
 }
 setTimeout(setHighlight, 100);
 
@@ -169,8 +158,8 @@ let correctnessOpened = false;
         grid.appendChild(unit1);
         grid.appendChild(unit2);
         document.querySelector(".correctness")?.appendChild(grid);
-        stringToCodeBlock(unit1, recursiveCorrectness);
         stringToCodeBlock(unit2, dynamicCorrectness);
+        stringToCodeBlock(unit1, recursiveCorrectness);
         correctnessOpened = true;
       }
     } else {
@@ -248,6 +237,26 @@ async function setOldResult(main: string, sub: string) {
   }
 }
 
+function createParagraph(colored: string) {
+  var p = document.createElement("p");
+  p.className = "code-line";
+  while (true) {
+    let cIndex = colored.indexOf("|ç");
+    var b = document.createElement("b");
+    b.innerText = colored.slice(0, cIndex == -1 ? colored.length : cIndex);
+    b.style.color = highlightColors[colored[cIndex + 2]];
+    p.appendChild(b);
+    if (cIndex == -1) {
+      break;
+    }
+    colored = colored.slice(colored.indexOf("|ç") + 3);
+    if (colored.length == 0) {
+      break;
+    }
+  }
+  return p;
+}
+
 function stringToCodeBlock(
   parent: HTMLElement,
   str: string,
@@ -261,7 +270,8 @@ function stringToCodeBlock(
       break;
     }
     let div = document.createElement("div");
-    if (str[end - 1] == "{") {
+    div.className = "code-line";
+    if (str[end - 1] == "{" || str[end - 4] == "{") {
       let openIndex = end + 1;
       let closeIndex = end + 1;
       while (true) {
@@ -281,51 +291,43 @@ function stringToCodeBlock(
 
       let newStr = str.slice(end + 1, closeIndex);
       if (!sameLine) {
-        parent.insertAdjacentText("beforeend", str.slice(index, end));
+        parent.insertAdjacentElement(
+          "beforeend",
+          createParagraph(str.slice(index, end))
+        );
       }
-      if (str[str.indexOf("\n", closeIndex) - 1] == "{") {
+      if (str[str.indexOf("\n", closeIndex) - 4] == "{") {
         sameLine = true;
+      } else {
+        sameLine = false;
       }
       stringToCodeBlock(div, newStr, sameLine);
-      parent.insertAdjacentElement("beforeend", div);
-      parent.insertAdjacentText(
-        "beforeend",
-        str.slice(closeIndex, str.indexOf("\n", closeIndex))
-      );
-      parent.insertAdjacentElement("beforeend", document.createElement("br"));
 
-      div.className = "ident";
+      parent.insertAdjacentElement("beforeend", div);
+      parent.insertAdjacentElement(
+        "beforeend",
+        createParagraph(str.slice(closeIndex, str.indexOf("\n", closeIndex)))
+      );
+      // parent.insertAdjacentElement("beforeend", document.createElement("br"));
+
+      div.classList.add("ident");
       end = closeIndex + 1;
     } else {
       var colored = str
         .slice(index, end)
         .replace(/\|o/g, "{")
         .replace(/\|c/g, "}");
-      var p = document.createElement("p");
-      while (true) {
-        let cIndex = colored.indexOf("|ç");
-        var b = document.createElement("b");
-        b.innerText = colored.slice(0, cIndex);
-        b.style.color = highlightColors[colored[cIndex + 2]];
-        p.appendChild(b);
-        if (cIndex == -1) {
-          break;
-        }
-        colored = colored.slice(colored.indexOf("|ç") + 3);
-        if (colored.length == 0) {
-          break;
-        }
-      }
-      div.appendChild(p);
+
+      div.appendChild(createParagraph(colored));
       // div.innerText = str;
 
       if (div.innerText == " ") {
         parent.insertAdjacentElement("beforeend", document.createElement("br"));
       } else {
         if (div.innerText.includes("|g")) {
-          div.className = "correctness-highlight";
+          div.classList.add("correctness-highlight");
+          div.innerText = div.innerText.replace(/\|g/g, "");
         }
-        // div.innerText = div.innerText.replace(/\|g/g, "");
         parent.insertAdjacentElement("beforeend", div);
       }
     }
@@ -399,23 +401,39 @@ let dynamicCorrectness = `count|ç1(|ç0mainstring|ç2,|ç0 substring|ç2,|ç0 m
 }
 `;
 
-let recursiveCorrectness = `count(mainstring, substring, m, n){
-  se n é igual a 0 {
-    |gCaso base, se n for 0, uma sequência completa da substring foi encontrada na mainstring portanto retorna 1.
-    retorne 1
-  }
-  se m é igual a 0 {
-    |gCaso base, se m for 0 e n maior que 0, uma sequência completa da substring não foi encontrada na mainstring portanto retorna 0.
-    retorne 0
-  }
-  se a[m - 1] é igual a b[n - 1] {
-    |gCobre as duas possibilidades de continuar com uma sequência e começar uma nova.
-    retorne count(mainstring, substring, m - 1, n - 1) + 
-            count(mainstring, substring, m - 1, n)
-  }
-  caso contrário { 
-    |gJá que os caracteres não são iguais, não existe continuação da sequência, portanto apenas cobre a possibilidade de começar uma nova sequência.
-    retorne count(mainstring, substring, m - 1, n)
-  }
+let recursiveCorrectness = `
+    pré condições: a e b são strings, m e n são inteiros positivos|ç3
+    pós condições: retorna o número de vezes que b ocorre em a|ç3
+    algoritmo contarOcorrencia|ç1(|ç0a|ç2,|ç0 b|ç2,|ç0 m|ç2,|ç0 n|ç2){
+    se|ç1 n|ç2 é ==|ç0 0|ç2 {
+        retorne|ç1 1|ç2
+    }
+    se|ç1 m == 0 {
+        retorne|ç1 0|ç2
+    }
+    se|ç1 a|ç2[|ç0m|ç2 -|ç0 1|ç2] == |ç0b|ç2[|ç0n|ç2 -|ç0 1|ç2] {|ç0
+        retorne |ç1contarOcorrencia|ç0(a, b, m - 1, n - 1) + |ç1contarOcorrencia|ç1(a, b, m - 1, n)
+    }|ç0 senão|ç1 {
+        retorne|ç1 contarOcorrencia|ç1(a, b, m - 1, n)
+    }
 }
 `;
+
+var morph = anime({
+  targets: ".blob path",
+  d: [
+    {
+      value:
+        "M60.2,-58.4C76.8,-43.6,88.2,-21.8,84.2,-4C80.2,13.8,60.8,27.6,44.2,37.7C27.6,47.8,13.8,54.2,0.4,53.8C-13,53.5,-26.1,46.3,-38.5,36.2C-50.9,26.1,-62.7,13,-62.4,0.2C-62.2,-12.6,-50,-25.2,-37.6,-40.1C-25.2,-54.9,-12.6,-71.9,4.6,-76.5C21.8,-81.1,43.6,-73.2,60.2,-58.4Z",
+    },
+    {
+      value:
+        "M50.3,-47.5C64.9,-35.7,76.2,-17.9,75.7,-0.4C75.3,17,63.1,34,48.6,40.2C34,46.3,17,41.7,1.6,40.1C-13.8,38.4,-27.5,39.9,-35,33.7C-42.6,27.5,-43.9,13.8,-42.7,1.2C-41.5,-11.4,-37.8,-22.8,-30.3,-34.5C-22.8,-46.3,-11.4,-58.5,3.2,-61.8C17.9,-65,35.7,-59.3,50.3,-47.5Z",
+    },
+  ],
+  duration: 1000,
+  easing: "easeInOutQuad",
+  loop: true,
+  direction: "alternate",
+  autoplay: false,
+});

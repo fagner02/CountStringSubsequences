@@ -55,6 +55,13 @@
   background-color: hsl(200, 50%, 50%);
 }
 
+.border-box {
+  border: 1px solid hsl(0, 0%, 20%);
+  border-radius: 5px;
+  width: fit-content;
+  padding: 5px;
+}
+
 input,
 p,
 button {
@@ -75,19 +82,75 @@ body {
   height: -moz-available;
   display: flex;
   flex-direction: column;
-  /* background-color: hsl(220, 50%, 20%); */
-  /* background-image: url("/star.png"); */
-  background-size: 400px;
 }
 
 body {
   margin: 5%;
 }
 
-.main {
-  display: flex;
+svg {
+  position: absolute;
 }
 
+.blob {
+  top: 40%;
+  left: 87%;
+  height: 1000px;
+}
+
+.bottom-right-blob {
+  bottom: 0px;
+  right: 0px;
+}
+
+path {
+  fill: hsl(240, 65%, 20%);
+}
+
+.bar {
+  width: 100%;
+  height: 200px;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  scale: 1.85 1;
+}
+
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-image: url("/StarsWhite.png");
+  background-size: 300px;
+  animation: translate 50s linear infinite;
+  background-position: 0 50px;
+}
+
+@keyframes translate {
+  0% {
+    background-position: 0px 300px;
+  }
+  100% {
+    background-position: 0px 0px;
+  }
+}
+
+.main {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 800px;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+.code-line {
+  padding: 0;
+}
 .box {
   display: grid;
   grid-template: 1fr / 1fr;
@@ -96,15 +159,17 @@ body {
 
 .highlight {
   position: relative;
-  background: hsl(200, 50%, 50%);
   grid-area: unit;
-  transition: all 0.3s;
   border-radius: 5px;
   opacity: 0;
+  border: 1px solid hsl(0 0% 100%);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s;
+  height: 300px;
 }
 
 .back {
-  background: hsl(0, 0%, 20%);
+  /* background: #000; */
   grid-area: unit;
   border-radius: 5px;
 }
@@ -130,13 +195,6 @@ body {
 p {
   margin: 0;
   padding: 5px 10px;
-}
-
-.border-box {
-  border: 1px solid hsl(0, 0%, 20%);
-  border-radius: 5px;
-  width: fit-content;
-  padding: 5px;
 }
 
 input {
@@ -175,7 +233,15 @@ input {
 }
 .text {
   display: none;
+  z-index: 1;
   margin: 10px 0px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
+  padding: 15px;
+  padding-left: 5px;
 }
 
 .result-op > p,
@@ -186,11 +252,19 @@ input {
 .result-box {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 20px;
   grid-area: unit;
   height: fit-content;
   z-index: -1;
   opacity: 0;
+
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
+  padding: 15px;
+  width: fit-content;
 }
 
 .title-box {
@@ -217,6 +291,12 @@ button:active {
   align-content: flex-start;
   opacity: 0;
   z-index: -1;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
+  padding: 15px;
 }
 
 .recursive-tree {
@@ -302,6 +382,14 @@ b {
 .controls {
   display: flex;
   gap: 5px;
+
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
+  padding: 15px;
+  width: fit-content;
 }
 
 .last-repeated-character,
@@ -316,12 +404,16 @@ b {
   overflow-y: auto;
   backdrop-filter: blur(5px);
   border-radius: 5px;
+  margin: 10px;
+  box-shadow: 0 0 10px hsl(0, 0%, 0%, 30%);
+  padding-left: 15px;
 }
 
 .params-grid {
   display: grid;
   gap: 5px;
   margin-left: 10px;
+  grid-template-columns: auto 1fr;
 }
 .input {
   grid-column: 1;
@@ -381,6 +473,12 @@ b {
 
 .correctness > .border-box {
   padding: 15px 20px;
+
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
 }
 
 .ident {
@@ -417,6 +515,13 @@ b {
   width: fit-content;
   gap: 5px;
   margin-bottom: 1px;
+
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px hsl(0 0% 0% / 30%);
+  border-radius: 5px;
+  margin: 10px;
+  border: none;
+  padding: 15px;
 }
 
 .dynamic-table-values {

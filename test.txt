@@ -196,21 +196,23 @@ async function count(a: any, b: any, m: any, n: any): Promise<number> {
   else return count(a, b, m - 1, n);
 }
 
-count(mainstring, substring, m, n) {
-  variável lookup = matriz de inteiro com dimensões [m+1][n+1]
+Algoritmo |ç1CountOccurrencesDP|ç1 (mainstring, substring, m, n)
+    variável lookup = matriz de inteiro com dimensões [m+1][n+1]
+ 
+    para i de 1 até m
+        lookup[0][i] = 0
+ 
+    para j de 1 até n
+        lookup[i][0] = 1
+    
+    para i de 1 até m 
+        para j de 1 até n 
+            se mainstring[i - 1] == [j - 1] 
+                lookup[i][j] =  lookup[i - 1][j - 1] + 
+                                lookup[i - 1][j]
 
-  for (i = 0; i <= n; ++i) lookup[0][i] = 0;
-
-  for (i = 0; i <= m; ++i) lookup[i][0] = 1;
-
-  for (i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      se mainstring[i - 1] é igual a substring[j - 1] {
-        lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j];
-      } caso contrario {
-        lookup[i][j] = lookup[i - 1][j];
-      } 
-    }
-  }
-  return lookup[m][n];
-}
+            caso contrario 
+                lookup[i][j] = lookup[i - 1][j]
+                
+  
+    retorna lookup[m][n]

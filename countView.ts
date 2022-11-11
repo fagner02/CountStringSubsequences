@@ -41,7 +41,7 @@ function resetCountRecursiveView(main: string, sub: string) {
 
   var parent = document.createElement("div");
   parent.className = "recursive-tree";
-  document.querySelector("body>.grid>.count-view")?.append(parent);
+  document.querySelector(".count-view")?.append(parent);
 
   recursiveTree = parent;
   resultText2.innerText = "result: ?";

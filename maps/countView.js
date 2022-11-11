@@ -32,7 +32,7 @@ function resetCountRecursiveView(main, sub) {
     (_a = document.querySelector(".recursive-tree")) === null || _a === void 0 ? void 0 : _a.remove();
     var parent = document.createElement("div");
     parent.className = "recursive-tree";
-    (_b = document.querySelector("body>.grid>.count-view")) === null || _b === void 0 ? void 0 : _b.append(parent);
+    (_b = document.querySelector(".count-view")) === null || _b === void 0 ? void 0 : _b.append(parent);
     recursiveTree = parent;
     resultText2.innerText = "result: ?";
     resultText2.style.backgroundColor = "hsl(0, 0%, 20%)";

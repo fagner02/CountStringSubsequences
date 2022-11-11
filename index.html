@@ -15,8 +15,9 @@
     <script src="maps/countView.js" defer></script>
     <script src="maps/algorithms.js" defer></script>
     <script src="maps/findView.js" defer></script>
-    <script src="maps/three.js" defer></script>
+    <script src="maps/three.js"></script>
     <script src="maps/countDynamic.js" defer></script>
+    <script src="anime.min.js"></script>
   </head>
   <body>
     <div class="pop-up">
@@ -27,6 +28,98 @@
         </div>
       </div>
     </div>
+    <div class="stars"></div>
+    <svg
+      class="bar"
+      width="100%"
+      height="209"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_i_1_3)">
+        <path
+          d="M57.8124 107C21 133.196 6.6342 175 0 209V0.000137329H385C356 23 350.247 33.3244 307 66C263.753 98.6756 242 93 169.646 80.0001C123 71.6191 82 89.7882 57.8124 107Z" />
+      </g>
+      <defs>
+        <filter
+          transform="scale(1.85, 1)"
+          id="filter0_i_1_3"
+          x="-7"
+          y="-7"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha" />
+          <feOffset dx="-7" dy="-7" />
+          <feGaussianBlur stdDeviation="10" />
+          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" />
+          <feBlend mode="normal" in2="shape" result="effect1_innerShadow_1_3" />
+        </filter>
+      </defs>
+    </svg>
+
+    <svg class="blob" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill=""
+        d="M60.2,-58.4C76.8,-43.6,88.2,-21.8,84.2,-4C80.2,13.8,60.8,27.6,44.2,37.7C27.6,47.8,13.8,54.2,0.4,53.8C-13,53.5,-26.1,46.3,-38.5,36.2C-50.9,26.1,-62.7,13,-62.4,0.2C-62.2,-12.6,-50,-25.2,-37.6,-40.1C-25.2,-54.9,-12.6,-71.9,4.6,-76.5C21.8,-81.1,43.6,-73.2,60.2,-58.4Z"
+        transform="translate(100 100)" />
+    </svg>
+    <svg
+      class="bottom-right-blob"
+      width="400px"
+      viewBox="0 0 276 143"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_i_21_3)">
+        <path
+          d="M221 23C243.907 -6.07381 276 2 276 2L276 143L0 143C0 119 6 94 36 77.0003C66 60.0005 103 62 165 77.0003C196 84.5004 195 56 221 23Z"
+          fill="#121254" />
+      </g>
+      <defs>
+        <filter
+          id="filter0_i_21_3"
+          x="-7"
+          y="-6.02945"
+          width="283"
+          height="149.03"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha" />
+          <feOffset dx="-7" dy="-7" />
+          <feGaussianBlur stdDeviation="10" />
+          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" />
+          <feBlend
+            mode="normal"
+            in2="shape"
+            result="effect1_innerShadow_21_3" />
+        </filter>
+      </defs>
+    </svg>
+
     <div class="main">
       <div class="box">
         <div class="back"></div>
@@ -41,156 +134,171 @@
         </div>
       </div>
     </div>
-    <div class="text border-box column">
-      <div>
-        <p>main string:</p>
-        <input id="main" />
-      </div>
-      <div>
-        <p>sub string:</p>
-        <input id="sub" />
-      </div>
-    </div>
-    <div class="grid">
-      <div class="correctness unit column">
-        <div class="controls">
-          <button
-            style="background-color: hsl(200, 50%, 50%)"
-            onclick="openIterativeCorrectness()">
-            Dynamic
-          </button>
-          <button onclick="openRecursiveCorrectness()">Recursive</button>
-        </div>
-        <div class="grid border-box"></div>
-      </div>
-      <div class="introduction unit column">
-        <h1>
-          Encontrar o número de vezes que uma substring aparece como
-          subsequência de uma string
-        </h1>
-        <div class="params-grid">
-          <div class="input">
-            <p class="colored-box">Entrada:</p>
-          </div>
-          <div class="column input-value">
-            <p>
-              uma string mainstring representando a string principal na qual as
-              subsequencias vão ser procuradas
-            </p>
-            <p>
-              uma string substring representando a string que vai ser procurada
-              como subsequencia da string principal
-            </p>
-            <p>um inteiro m representando o tamanho da mainstring</p>
-            <p>um inteiro n representando o tamanho da substring</p>
-          </div>
-          <div class="output"><p class="colored-box">Saida:</p></div>
-          <div class="column output-value">
-            <p>
-              Um inteiro representando a quantidade de vezes que a substring
-              aparece como subsequencia da mainstring
-            </p>
-          </div>
-        </div>
-        <p>
-          Para uma string principal “eu programo e eu amo isso” e uma substring
-          a ser procurada “eu”, a saída esperada é 4 pois as letras da substring
-          “eu” aparecem em sequência 4 vezes na string principal.
-        </p>
-        <div class="example-box column">
-          <p class="colored-box"><b>eu</b> programo e eu amo isso</p>
-          <p class="colored-box"><b>e</b>u programo e e<b>u</b> amo isso</p>
-          <p class="colored-box">eu programo <b>e</b> e<b>u</b> amo isso</p>
-          <p class="colored-box">eu programo e <b>eu</b> amo isso</p>
-        </div>
-        <p>
-          As letras em negrito acima podem ajudar a visualizar as sequências das
-          letras de “eu”.
-        </p>
-      </div>
-      <div class="result-box unit">
+    <div
+      style="
+        margin-top: 80px;
+        margin-left: 20px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        height: -webkit-fill-available;
+        width: -webkit-fill-available;
+        width: -moz-available;
+        height: -moz-available;
+      ">
+      <div class="text border-box column">
         <div>
-          <div class="title-box">
-            <button onclick="setOldResult(inputMain.value,inputSub.value)">
-              old code
-            </button>
-          </div>
-          <div class="result-ol">
-            <p>batch item:</p>
-            <p>count:</p>
-            <p></p>
-          </div>
+          <p>main string:</p>
+          <input id="main" />
         </div>
         <div>
-          <div class="title-box">
+          <p>sub string:</p>
+          <input id="sub" />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="correctness unit column">
+          <div class="controls">
             <button
-              onclick="setOptimizedResult(inputMain.value,inputSub.value)">
-              optimized code
+              style="background-color: hsl(200, 50%, 50%)"
+              onclick="openIterativeCorrectness()">
+              Dynamic
+            </button>
+            <button onclick="openRecursiveCorrectness()">Recursive</button>
+          </div>
+          <div class="grid border-box"></div>
+        </div>
+        <div class="introduction unit column">
+          <h1>
+            Encontrar o número de vezes que uma substring aparece como
+            subsequência de uma string
+          </h1>
+          <div class="params-grid">
+            <div class="input">
+              <p class="colored-box">Entrada:</p>
+            </div>
+            <div class="column input-value">
+              <p>
+                uma string mainstring representando a string principal na qual
+                as subsequencias vão ser procuradas
+              </p>
+              <p>
+                uma string substring representando a string que vai ser
+                procurada como subsequencia da string principal
+              </p>
+              <p>um inteiro m representando o tamanho da mainstring</p>
+              <p>um inteiro n representando o tamanho da substring</p>
+            </div>
+            <div class="output"><p class="colored-box">Saida:</p></div>
+            <div class="column output-value">
+              <p>
+                Um inteiro representando a quantidade de vezes que a substring
+                aparece como subsequencia da mainstring
+              </p>
+            </div>
+          </div>
+          <p>
+            Para uma string principal “eu programo e eu amo isso” e uma
+            substring a ser procurada “eu”, a saída esperada é 4 pois as letras
+            da substring “eu” aparecem em sequência 4 vezes na string principal.
+          </p>
+          <div class="example-box column">
+            <p class="colored-box"><b>eu</b> programo e eu amo isso</p>
+            <p class="colored-box"><b>e</b>u programo e e<b>u</b> amo isso</p>
+            <p class="colored-box">eu programo <b>e</b> e<b>u</b> amo isso</p>
+            <p class="colored-box">eu programo e <b>eu</b> amo isso</p>
+          </div>
+          <p>
+            As letras em negrito acima podem ajudar a visualizar as sequências
+            das letras de “eu”.
+          </p>
+        </div>
+        <div class="result-box unit">
+          <div>
+            <div class="title-box">
+              <button onclick="setOldResult(inputMain.value,inputSub.value)">
+                old code
+              </button>
+            </div>
+            <div class="result-ol">
+              <p>batch item:</p>
+              <p>count:</p>
+              <p></p>
+            </div>
+          </div>
+          <div>
+            <div class="title-box">
+              <button
+                onclick="setOptimizedResult(inputMain.value,inputSub.value)">
+                optimized code
+              </button>
+            </div>
+            <div class="result-op">
+              <p>batch item:</p>
+              <p>count:</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="count-view unit column">
+          <div class="controls">
+            <button
+              onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
+              reset
+            </button>
+            <button onclick="countRecursiveView()">next</button>
+          </div>
+          <p class="colored-box">result: ?</p>
+          <div class="recursive-tree"></div>
+        </div>
+        <div class="find-view unit column">
+          <div class="controls">
+            <button
+              onclick="resetCountAggregateCalcView(inputMain.value, inputSub.value)">
+              reset
+            </button>
+            <button class="next" onclick="countAggregateCalcView()">
+              next
             </button>
           </div>
-          <div class="result-op">
-            <p>batch item:</p>
-            <p>count:</p>
-            <p></p>
+          <p class="colored-box">result: ?</p>
+          <div class="column">
+            <div style="overflow-x: auto; display: flex">
+              <div class="map-items"></div>
+            </div>
+            <div class="title-box border-box">
+              <p>last repeated character value:</p>
+              <p class="last-repeated-character colored-box">?</p>
+            </div>
+            <div class="title-box border-box">
+              <p>current repeated character value:</p>
+              <p class="cur-repeated-character colored-box">?</p>
+            </div>
+            <div class="title-box border-box">
+              <p>sub string:</p>
+              <p class="sub-string colored-box">test</p>
+            </div>
+            <div class="title-box border-box">
+              <p>main string:</p>
+              <p class="main-string colored-box">test</p>
+            </div>
+            <div class="title-box border-box">
+              <p>i:</p>
+              <p class="iterator colored-box"></p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="count-view unit column">
-        <div class="controls">
-          <button
-            onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
-            reset
-          </button>
-          <button onclick="countRecursiveView()">next</button>
-        </div>
-        <p class="colored-box">result: ?</p>
-        <div class="recursive-tree"></div>
-      </div>
-      <div class="find-view unit column">
-        <div class="controls">
-          <button
-            onclick="resetCountAggregateCalcView(inputMain.value, inputSub.value)">
-            reset
-          </button>
-          <button class="next" onclick="countAggregateCalcView()">next</button>
-        </div>
-        <p class="colored-box">result: ?</p>
-        <div class="column">
-          <div style="overflow-x: auto; display: flex">
-            <div class="map-items"></div>
+        <div class="dynamic-view unit column">
+          <div class="controls">
+            <button onclick="resetCountDynamic(inputMain.value,inputSub.value)">
+              reset
+            </button>
+            <button onclick="countDynamic()">next</button>
           </div>
-          <div class="title-box border-box">
-            <p>last repeated character value:</p>
-            <p class="last-repeated-character colored-box">?</p>
-          </div>
-          <div class="title-box border-box">
-            <p>current repeated character value:</p>
-            <p class="cur-repeated-character colored-box">?</p>
-          </div>
-          <div class="title-box border-box">
-            <p>sub string:</p>
-            <p class="sub-string colored-box">test</p>
-          </div>
-          <div class="title-box border-box">
-            <p>main string:</p>
-            <p class="main-string colored-box">test</p>
-          </div>
-          <div class="title-box border-box">
-            <p>i:</p>
-            <p class="iterator colored-box"></p>
-          </div>
-        </div>
-      </div>
-      <div class="dynamic-view unit column">
-        <div class="controls">
-          <button onclick="resetCountDynamic(inputMain.value,inputSub.value)">
-            reset
-          </button>
-          <button onclick="countDynamic()">next</button>
-        </div>
-        <div style="overflow-y: auto">
-          <div class="dynamic-table">
-            <div class="dynamic-table-values"></div>
+          <div style="overflow-y: auto">
+            <div class="dynamic-table">
+              <div class="dynamic-table-values"></div>
+            </div>
           </div>
         </div>
       </div>
