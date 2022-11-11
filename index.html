@@ -21,10 +21,11 @@
   </head>
   <body>
     <div class="pop-up">
-      <div class="pop-up-box">
+      <div class="pop-up-box" style="scale: 0">
         <div class="team">
           <div class="colored-box">Fagner Ferreira</div>
           <div class="colored-box">Carlos Samuel</div>
+          <div class="colored-box">Adailton</div>
         </div>
       </div>
     </div>
@@ -136,7 +137,7 @@
     </div>
     <div
       style="
-        margin-top: 80px;
+        margin-top: 70px;
         margin-left: 20px;
         z-index: 1;
         display: flex;
@@ -198,15 +199,15 @@
             </div>
           </div>
           <p>
-            Para uma string principal “eu programo e eu amo isso” e uma
-            substring a ser procurada “eu”, a saída esperada é 4 pois as letras
-            da substring “eu” aparecem em sequência 4 vezes na string principal.
+            Para uma string principal “banana” e uma substring a ser procurada
+            “ana”, a saída esperada é 4 pois as letras da substring “ana”
+            aparecem em sequência 4 vezes na string principal.
           </p>
           <div class="example-box column">
-            <p class="colored-box"><b>eu</b> programo e eu amo isso</p>
-            <p class="colored-box"><b>e</b>u programo e e<b>u</b> amo isso</p>
-            <p class="colored-box">eu programo <b>e</b> e<b>u</b> amo isso</p>
-            <p class="colored-box">eu programo e <b>eu</b> amo isso</p>
+            <p class="colored-box">b<b>ana</b>na</p>
+            <p class="colored-box">b<b>an</b>an<b>a</b></p>
+            <p class="colored-box">b<b>a</b>na<b>na</b></p>
+            <p class="colored-box">ban<b>ana</b></p>
           </div>
           <p>
             As letras em negrito acima podem ajudar a visualizar as sequências
@@ -295,7 +296,7 @@
             </button>
             <button onclick="countDynamic()">next</button>
           </div>
-          <div style="overflow-y: auto">
+          <div class="dynamic-box" style="overflow-y: auto">
             <div class="dynamic-table">
               <div class="dynamic-table-values"></div>
             </div>

@@ -27,28 +27,54 @@ window.addEventListener("resize", setHighlight);
 let popupBackground = document.querySelector(".pop-up");
 let teamPresented = false;
 let popupOn = false;
+let recursiveViewOn = false;
+let dynamicViewOn = false;
 window.addEventListener("keydown", (e) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     console.log(e.ctrlKey, e.key, e.code);
     if (e.key == "Escape") {
         if (popupOn) {
-            popupBackground.remove();
-            popupBackground = document.createElement("div");
-            popupBackground.className = "pop-up";
+            popupBackground.style.display = "none";
             popupOn = false;
         }
     }
     if (e.key == "|" && e.ctrlKey && e.shiftKey) {
+        popupBackground.style.display = "block";
         if (!teamPresented) {
-            popupBackground.style.display = "block";
-            popupOn = true;
+            var el = document.querySelector(".pop-up-box");
+            el.style.scale = "1";
             teamPresented = true;
+            popupOn = true;
+            return;
+        }
+        if (!popupOn && recursiveViewOn) {
+            var el = document.querySelector(".pop-up-box");
+            el.remove();
+            el = document.createElement("div");
+            el.className = "pop-up-box";
+            el.style.scale = "0";
+            (_a = document.querySelector(".pop-up")) === null || _a === void 0 ? void 0 : _a.appendChild(el);
+            stringToCodeBlock(el, recursiveCorrectness);
+            el.style.scale = "1";
+            popupOn = true;
+        }
+        if (!popupOn && dynamicViewOn) {
+            var el = document.querySelector(".pop-up-box");
+            el.remove();
+            el = document.createElement("div");
+            el.className = "pop-up-box";
+            el.style.scale = "0";
+            (_b = document.querySelector(".pop-up")) === null || _b === void 0 ? void 0 : _b.appendChild(el);
+            stringToCodeBlock(el, dynamicCorrectness);
+            el.style.scale = "1";
+            popupOn = true;
         }
     }
 }));
 let inputMain = document.querySelector("#main");
-inputMain.value = "aa";
+inputMain.value = "banana";
 let inputSub = document.querySelector("#sub");
-inputSub.value = "a";
+inputSub.value = "ana";
 let resultsOp = document.querySelectorAll(".result-op > p");
 let resultsOl = document.querySelectorAll(".result-ol > p");
 let resultThree = document.querySelectorAll(".result-three > p");
@@ -103,6 +129,7 @@ document.querySelectorAll("p.option").forEach((x) => {
         if (x.innerText == "Recursive-Code") {
             countView.style.opacity = "1";
             countView.style.zIndex = "1";
+            recursiveViewOn = true;
             if (startCountRecursiveView) {
                 resetCountRecursiveView(main, sub);
             }
@@ -110,6 +137,7 @@ document.querySelectorAll("p.option").forEach((x) => {
         else {
             countView.style.opacity = "0";
             countView.style.zIndex = "-1";
+            recursiveViewOn = false;
         }
         if (x.innerText == "Iterative-Code") {
             findView.style.opacity = "1";
@@ -125,6 +153,7 @@ document.querySelectorAll("p.option").forEach((x) => {
         if (x.innerText == "Dynamic-Code") {
             dynamicView.style.opacity = "1";
             dynamicView.style.zIndex = "1";
+            dynamicViewOn = true;
             if (startCountDynamicView) {
                 resetCountDynamic(main, sub);
             }
@@ -132,6 +161,7 @@ document.querySelectorAll("p.option").forEach((x) => {
         else {
             dynamicView.style.opacity = "0";
             dynamicView.style.zIndex = "-1";
+            dynamicViewOn = false;
         }
         if (x.innerText == "Correctness") {
             correctness.style.opacity = "1";
@@ -338,39 +368,44 @@ count(mainstring, substring, m, n) {
   retorna anterior.valor
 }
 `;
-let dynamicCorrectness = `count|ç1(|ç0mainstring|ç2,|ç0 substring|ç2,|ç0 m|ç2,|ç0 n|ç2) {|ç0
-  variável lookup = matriz de inteiro com dimensões [m+1][n+1]
+let dynamicCorrectness = `algoritmo |ç0countOccurrencesDP|ç1 (|ç0mainstring|ç2,|ç0 substring|ç2,|ç0 m|ç2,|ç0 n|ç2) {|ç0
+    variável|ç0 lookup|ç2 =|ç0 matriz de inteiro com dimensões|ç3 [m+1][n+1]|ç0
  
-  for (i = 0; i <= n; ++i) lookup[0][i] = 0
- 
-  for (i = 0; i <= m; ++i) lookup[i][0] = 1
- 
-  for (i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      se mainstring[i - 1] é igual a substring[j - 1] {
-        lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j];
-      } caso contrario {
-        lookup[i][j] = lookup[i - 1][j]
-      } 
+    para|ç1 i|ç2 de|ç1 1|ç2 até|ç1 m|ç2{|ç0
+        lookup|ç2[0][i]|ç0 = |ç00|ç2
     }
-  }
-  retorna lookup[m][n]
-}
+    para|ç1 j|ç2 de|ç1 1|ç2 até|ç1 n|ç2{
+      lookup|ç2[i][0] = |ç01|ç2
+    }
+    para |ç1i|ç2 de|ç1 1|ç2 até|ç1 m|ç2 {|ç0
+      para |ç1j |ç2de|ç1 1|ç2 até|ç1 n|ç2 {|ç0
+            se|ç1 mainstring|ç2[i - 1] == [j - 1]{|ç0
+                lookup|ç2[i][j] =  |ç0lookup|ç2[i - 1][j - 1] + |ç0
+                                lookup|ç2[i - 1][j]|ç0
+            }
+            caso contrario |ç1{|ç0
+                lookup|ç2[i][j] =|ç0 lookup|ç2[i - 1][j]|ç0
+              }
+      }
+    }
+  
+    retorna|ç1 lookup|ç0[m][n]
+    }
 `;
 let recursiveCorrectness = `
     pré condições: a e b são strings, m e n são inteiros positivos|ç3
     pós condições: retorna o número de vezes que b ocorre em a|ç3
-    algoritmo contarOcorrencia|ç1(|ç0a|ç2,|ç0 b|ç2,|ç0 m|ç2,|ç0 n|ç2){
-    se|ç1 n|ç2 é ==|ç0 0|ç2 {
+    algoritmo |ç0contarOcorrencia|ç1(|ç0a|ç2,|ç0 b|ç2,|ç0 m|ç2,|ç0 n|ç2){|ç0
+    se|ç1 n|ç2 ==|ç0 0|ç2 {|ç0
         retorne|ç1 1|ç2
     }
-    se|ç1 m == 0 {
+    se|ç1 m |ç2== |ç00|ç2 {|ç0
         retorne|ç1 0|ç2
     }
     se|ç1 a|ç2[|ç0m|ç2 -|ç0 1|ç2] == |ç0b|ç2[|ç0n|ç2 -|ç0 1|ç2] {|ç0
-        retorne |ç1contarOcorrencia|ç0(a, b, m - 1, n - 1) + |ç1contarOcorrencia|ç1(a, b, m - 1, n)
-    }|ç0 senão|ç1 {
-        retorne|ç1 contarOcorrencia|ç1(a, b, m - 1, n)
+        retorne |ç1contarOcorrencia|ç0(|ç0a|ç2,|ç0 b|ç2,|ç0 m |ç2-|ç01|ç2,|ç0 n|ç2|ç2-|ç01|ç2) + contarOcorrencia(|ç0a|ç2,|ç0 b|ç2,|ç0 m |ç2-|ç01|ç2,|ç0 n|ç2)
+    }|ç0 senão|ç1 {|ç0
+        retorne|ç1 contarOcorrencia|ç0(|ç0a|ç2,|ç0 b|ç2,|ç0 m |ç2-|ç01|ç2,|ç0 n|ç2)
     }
 }
 `;
@@ -390,4 +425,9 @@ var morph = anime({
     direction: "alternate",
     autoplay: false,
 });
+// var squareToBlob = anime({
+//   targets: ".pop-up-blob",
+//   duration: 1000,
+//   autoplay: false,
+// });
 //# sourceMappingURL=script.js.map
