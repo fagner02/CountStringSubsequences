@@ -40,7 +40,7 @@ function resetCountDynamic(main, sub) {
     table.append(firstCell);
     for (let i = 0; i < main.length + 1; i++) {
         let letter = document.createElement("div");
-        letter.className = "cell letter-cell";
+        letter.className = "cell letter-cell shadow-box";
         letter.innerText = i == 0 ? " " : main[i - 1];
         letter.style.gridColumn = `1`;
         letter.style.gridRow = `${i + 3}`;
@@ -55,7 +55,7 @@ function resetCountDynamic(main, sub) {
     }
     for (let i = 0; i < sub.length + 1; i++) {
         let letter = document.createElement("div");
-        letter.className = "cell letter-cell";
+        letter.className = "cell letter-cell shadow-box";
         letter.innerText = i == 0 ? " " : sub[i - 1];
         letter.style.gridColumn = `${i + 3}`;
         letter.style.gridRow = `1`;
