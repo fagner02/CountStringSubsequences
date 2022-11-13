@@ -2,8 +2,8 @@ let blobCount = 0;
 
 let blobs = [
   {
-    width: "100%",
-    height: "209",
+    width: "",
+    height: "",
     className: "bar",
     path: "M57.8124 107C21 133.196 6.6342 175 0 209V0.000137329H385C356 23 350.247 33.3244 307 66C263.753 98.6756 242 93 169.646 80.0001C123 71.6191 82 89.7882 57.8124 107Z",
     transform: "",
@@ -102,4 +102,29 @@ blobs.forEach((element) => {
     "none",
     element.transform
   ).classList.add("bar-b");
+});
+
+var options = document.querySelector(".cells")!;
+options.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+var bar = document.querySelector(".bar.bar-b") as HTMLElement;
+bar?.addEventListener("click", (e) => {
+  if (bar.dataset.clicked == "true") {
+    return;
+  }
+  e.stopPropagation();
+  document.querySelectorAll(".bar").forEach((x) => {
+    (<HTMLElement>x).dataset.clicked = "true";
+  });
+  (document.querySelector(".main") as HTMLElement).dataset.clicked = "true";
+});
+
+document.body.addEventListener("click", () => {
+  document.querySelectorAll(".bar").forEach((x) => {
+    (<HTMLElement>x).dataset.clicked = "false";
+  });
+
+  (document.querySelector(".main") as HTMLElement).dataset.clicked = "false";
 });

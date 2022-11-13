@@ -13,6 +13,7 @@ function setHighlight() {
   highlight.style.top = highlightSelected.offsetTop + "px";
   highlight.style.width = highlightSelected.offsetWidth + "px";
   highlight.style.left = highlightSelected.offsetLeft + "px";
+  highlight.style.height = highlightSelected.clientHeight - 1 + "px";
 }
 setTimeout(setHighlight, 100);
 
@@ -456,29 +457,3 @@ let recursiveCorrectness = `
     }
 }
 `;
-
-var morph = anime({
-  targets: ".blob path",
-  d: [
-    {
-      value:
-        "M60.2,-58.4C76.8,-43.6,88.2,-21.8,84.2,-4C80.2,13.8,60.8,27.6,44.2,37.7C27.6,47.8,13.8,54.2,0.4,53.8C-13,53.5,-26.1,46.3,-38.5,36.2C-50.9,26.1,-62.7,13,-62.4,0.2C-62.2,-12.6,-50,-25.2,-37.6,-40.1C-25.2,-54.9,-12.6,-71.9,4.6,-76.5C21.8,-81.1,43.6,-73.2,60.2,-58.4Z",
-    },
-    {
-      value:
-        "M50.3,-47.5C64.9,-35.7,76.2,-17.9,75.7,-0.4C75.3,17,63.1,34,48.6,40.2C34,46.3,17,41.7,1.6,40.1C-13.8,38.4,-27.5,39.9,-35,33.7C-42.6,27.5,-43.9,13.8,-42.7,1.2C-41.5,-11.4,-37.8,-22.8,-30.3,-34.5C-22.8,-46.3,-11.4,-58.5,3.2,-61.8C17.9,-65,35.7,-59.3,50.3,-47.5Z",
-    },
-  ],
-  duration: 1000,
-  easing: "easeInOutQuad",
-  loop: true,
-  direction: "alternate",
-  autoplay: false,
-});
-
-// var squareToBlob = anime({
-//   targets: ".pop-up-blob",
-
-//   duration: 1000,
-//   autoplay: false,
-// });
