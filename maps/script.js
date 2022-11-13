@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 let highlight = document.querySelector(".highlight");
 let highlightSelected = document.querySelector("p");
 let highlightColors = {
-    "0": "black",
-    "1": "hsl(350, 65%, 45%)",
-    "2": "hsl(210, 50%, 40%)",
-    "3": "hsl(140, 55%, 40%)",
+    "0": "white",
+    "1": "hsl(350, 65%, 60%)",
+    "2": "hsl(210, 65%, 60%)",
+    "3": "hsl(140, 65%, 60%)",
 };
 function setHighlight() {
     highlight.style.opacity = "1";
@@ -169,7 +169,7 @@ document.querySelectorAll("p.option").forEach((x) => {
             if (!correctnessOpened) {
                 (_a = document.querySelector(".correctness > .grid")) === null || _a === void 0 ? void 0 : _a.remove();
                 let grid = document.createElement("div");
-                grid.className = "grid border-box";
+                grid.className = "grid shadow-box";
                 let unit1 = document.createElement("div");
                 unit1.className = "unit column";
                 let unit2 = document.createElement("div");

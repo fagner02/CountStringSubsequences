@@ -45,7 +45,7 @@ function resetCountRecursiveView(main: string, sub: string) {
 
   recursiveTree = parent;
   resultText2.innerText = "result: ?";
-  resultText2.style.backgroundColor = "hsl(0, 0%, 20%)";
+  resultText2.style.backgroundColor = "hsl(0, 0%, 10%)";
   stack = [];
   idCount = 1;
   mainStringRecursiveView = main;
@@ -138,8 +138,8 @@ function countRecursiveView(): void {
         (a, b) => a + b,
         0
       )}`;
-      resultText2.style.backgroundColor = "hsl(120, 55%, 45%)";
-      highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%)";
+      resultText2.style.backgroundColor = "hsl(120, 75%, 45%, 50%)";
+      highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%, 20%)";
       return;
     }
     var parentCall = stack[current.parent];
@@ -156,8 +156,8 @@ function countRecursiveView(): void {
             parentCall.m - 1
           }, ${parentCall.n})`;
 
-    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%)";
-    parent.style.backgroundColor = "hsl(250, 55%, 80%)";
+    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%, 20%)";
+    parent.style.backgroundColor = "hsl(250, 75%, 55%, 50%)";
     highlightedStep = parent;
 
     if (parentCall.result[0] == -1) {
@@ -165,13 +165,13 @@ function countRecursiveView(): void {
       if (parentCall.result.length == 1) {
         (<HTMLElement>(
           parent?.querySelector(".colored-box")
-        )).style.backgroundColor = "hsl(250, 55%, 45%)";
+        )).style.backgroundColor = "hsl(250, 55%, 45%, 100%)";
       }
     } else {
       parentCall.result[1] = current.result.reduce((a, b) => a + b, 0);
       (<HTMLElement>(
         parent?.querySelector(".colored-box")
-      )).style.backgroundColor = "hsl(250, 55%, 45%)";
+      )).style.backgroundColor = "hsl(250, 55%, 45%, 100%)";
     }
     var result = parentCall.result
       .filter((x) => x > -1)
@@ -240,10 +240,10 @@ function countRecursiveView(): void {
   if (current.n == 0) {
     current.result.push(1);
     resultText.innerText = "result: 1";
-    idText.style.backgroundColor = "hsl(120, 55%, 45%)";
+    idText.style.backgroundColor = "hsl(120, 55%, 45%, 100%)";
 
-    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%)";
-    content.style.backgroundColor = "hsl(120, 55%, 80%)";
+    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%, 20%)";
+    content.style.backgroundColor = "hsl(120, 75%, 55%, 50%)";
     highlightedStep = content;
 
     scrollToStep(content);
@@ -252,17 +252,17 @@ function countRecursiveView(): void {
   if (current.m == 0) {
     current.result.push(0);
     resultText.innerText = "result: 0";
-    idText.style.backgroundColor = "hsl(200, 55%, 45%)";
+    idText.style.backgroundColor = "hsl(200, 55%, 45%, 100%)";
 
-    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%)";
-    content.style.backgroundColor = "hsl(200, 55%, 80%)";
+    highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%, 20%)";
+    content.style.backgroundColor = "hsl(200, 75%, 55%, 50%)";
     highlightedStep = content;
 
     scrollToStep(content);
     return;
   }
-  highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%)";
-  content.style.backgroundColor = "hsl(250, 55%, 80%)";
+  highlightedStep!.style.backgroundColor = "hsl(0, 0%, 100%, 20%)";
+  content.style.backgroundColor = "hsl(250, 75%, 55%, 50%)";
   highlightedStep = content;
   if (
     mainStringRecursiveView[current.m - 1] ==

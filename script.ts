@@ -2,10 +2,10 @@ let highlight: HTMLElement = document.querySelector(".highlight")!;
 let highlightSelected = <HTMLElement>document.querySelector("p");
 
 let highlightColors: any = {
-  "0": "black",
-  "1": "hsl(350, 65%, 45%)",
-  "2": "hsl(210, 50%, 40%)",
-  "3": "hsl(140, 55%, 40%)",
+  "0": "white",
+  "1": "hsl(350, 65%, 60%)",
+  "2": "hsl(210, 65%, 60%)",
+  "3": "hsl(140, 65%, 60%)",
 };
 
 function setHighlight() {
@@ -183,7 +183,7 @@ let correctnessOpened = false;
       if (!correctnessOpened) {
         document.querySelector(".correctness > .grid")?.remove();
         let grid = <HTMLElement>document.createElement("div");
-        grid.className = "grid border-box";
+        grid.className = "grid shadow-box";
         let unit1 = <HTMLElement>document.createElement("div");
         unit1.className = "unit column";
         let unit2 = <HTMLElement>document.createElement("div");
