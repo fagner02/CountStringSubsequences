@@ -143,7 +143,7 @@
             </div>
           </div>
         </div>
-        <div class="count-view unit column shadow-box">
+        <div class="count-view unit column">
           <div class="controls shadow-box">
             <button
               onclick="resetCountRecursiveView(inputMain.value,inputSub.value)">
@@ -151,8 +151,10 @@
             </button>
             <button onclick="countRecursiveView()">next</button>
           </div>
-          <p class="colored-box">result: ?</p>
-          <div class="recursive-tree"></div>
+          <div class="column shadow-box">
+            <p class="colored-box">result: ?</p>
+            <div class="recursive-tree"></div>
+          </div>
         </div>
         <div class="find-view unit column">
           <div class="controls shadow-box">

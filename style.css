@@ -25,7 +25,7 @@ b:hover {
 .column {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .pop-up {
@@ -57,6 +57,7 @@ b:hover {
 .dynamic-box {
   backdrop-filter: blur(5px);
   padding: 15px;
+  margin-top: 0;
   /* width: fit-content; */
 }
 .team {
@@ -272,10 +273,10 @@ input {
   z-index: 1;
   margin: 0px 10px;
   backdrop-filter: blur(5px);
-  padding: 15px;
   padding-left: 5px;
   width: -webkit-fill-available;
   width: -moz-available;
+  gap: 0px;
 }
 
 .result-op > p,
@@ -321,8 +322,13 @@ button:active {
   align-content: flex-start;
   opacity: 0;
   z-index: -1;
-  backdrop-filter: blur(5px);
+}
+
+.count-view > .column {
   padding: 15px;
+  margin-top: 0;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
 .recursive-tree {
@@ -410,6 +416,7 @@ b {
   gap: 5px;
   backdrop-filter: blur(5px);
   padding: 15px;
+  margin-bottom: 0;
   /* width: fit-content; */
 }
 
@@ -452,6 +459,7 @@ b {
 .input-value {
   grid-column: 2;
   grid-row: 1;
+  gap: 5px;
 }
 .input-value > p,
 .output-value > p {
@@ -496,6 +504,7 @@ b {
 .correctness > .shadow-box {
   padding: 15px 20px;
   backdrop-filter: blur(5px);
+  margin-top: 0;
 }
 
 .ident {
@@ -579,14 +588,15 @@ b {
 }
 
 div::-webkit-scrollbar {
-  background-color: hsl(0, 0%, 35%);
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 0 5px hsl(0, 0%, 100%);
   border-radius: 5px;
   width: 10px;
   height: 10px;
 }
 
 div::-webkit-scrollbar-thumb {
-  background-color: hsl(0, 0%, 20%);
+  background-color: hsl(0, 0%, 10%);
   border-radius: 5px;
 }
 
@@ -604,8 +614,8 @@ div::-webkit-scrollbar-thumb {
 
 @media only screen and (max-width: 600px) {
   .bar {
+    z-index: 1;
     pointer-events: all;
-    z-index: 2;
     height: 80px;
     width: 50px;
   }
@@ -638,5 +648,6 @@ div::-webkit-scrollbar-thumb {
   }
   .main-content {
     margin-left: 0px;
+    margin-top: 20px;
   }
 }

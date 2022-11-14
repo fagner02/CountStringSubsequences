@@ -12,9 +12,9 @@ let highlight = document.querySelector(".highlight");
 let highlightSelected = document.querySelector("p");
 let highlightColors = {
     "0": "white",
-    "1": "hsl(350, 65%, 60%)",
-    "2": "hsl(210, 65%, 60%)",
-    "3": "hsl(140, 65%, 60%)",
+    "1": "hsl(350, 65%, 70%)",
+    "2": "hsl(210, 65%, 70%)",
+    "3": "hsl(140, 65%, 70%)",
 };
 function setHighlight() {
     highlight.style.opacity = "1";
