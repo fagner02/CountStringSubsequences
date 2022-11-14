@@ -58,8 +58,24 @@ b:hover {
   backdrop-filter: blur(5px);
   padding: 15px;
   margin-top: 0;
+  display: flex;
+  overflow-y: hidden;
+  padding-right: 0;
   /* width: fit-content; */
 }
+
+.scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: -webkit-fill-available;
+  width: -moz-available;
+  margin: 10px 15px 10px 0px;
+}
+
+.dynamic-box > .scroll {
+  overflow-x: auto;
+}
+
 .team {
   display: flex;
   flex-direction: column;
@@ -116,9 +132,10 @@ svg {
 }
 
 .blob {
-  top: 40%;
-  left: 87%;
-  height: 1000px;
+  bottom: 250px;
+  right: -170px;
+  height: 200px;
+  scale: 1.2;
 }
 
 .bottom-right-blob {
@@ -156,7 +173,7 @@ path {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 1;
+  /* z-index: 1; */
   background-image: url("/StarsWhite.png");
   background-size: 300px;
   animation: translate 50s linear infinite;
@@ -271,7 +288,7 @@ input {
 .text {
   display: none;
   z-index: 1;
-  margin: 0px 10px;
+  margin: 10px 10px 0px 10px;
   backdrop-filter: blur(5px);
   padding-left: 5px;
   width: -webkit-fill-available;
@@ -498,7 +515,7 @@ b {
   z-index: -1;
   font-size: 0.9rem;
   overflow: hidden;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .correctness > .shadow-box {
@@ -589,7 +606,6 @@ b {
 
 div::-webkit-scrollbar {
   background-color: hsl(0, 0%, 100%);
-  box-shadow: 0 0 5px hsl(0, 0%, 100%);
   border-radius: 5px;
   width: 10px;
   height: 10px;

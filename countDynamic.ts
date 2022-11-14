@@ -28,7 +28,7 @@ function resetCountDynamic(main: string, sub: string) {
   dynamicTable.style.gridTemplateRows = `repeat(${main.length + 2}, 1fr)`;
 
   table.appendChild(dynamicTable);
-  document.querySelector(".dynamic-view>div:last-child")?.append(table);
+  document.querySelector(".dynamic-view>div:last-child>div")?.append(table);
 
   mainStringCountDynamic = main;
   subStringCountDynamic = sub;
@@ -38,7 +38,7 @@ function resetCountDynamic(main: string, sub: string) {
   firstCell.style.gridColumn = "1";
   firstCell.style.gridRow = "2";
   firstCell.innerText = "m";
-  // firstCell.style.backgroundColor = "transparent";
+
   table.append(firstCell);
 
   firstCell = document.createElement("div");
@@ -46,7 +46,7 @@ function resetCountDynamic(main: string, sub: string) {
   firstCell.style.gridColumn = "2";
   firstCell.style.gridRow = "1";
   firstCell.innerText = "n";
-  // firstCell.style.backgroundColor = "transparent";
+
   table.append(firstCell);
   for (let i = 0; i < main.length + 1; i++) {
     let letter = document.createElement("div") as HTMLElement;
