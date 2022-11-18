@@ -225,14 +225,13 @@ async function sleep(ms: number, group?: string) {
   });
 }
 
-var curve: number[] = [];
 const algorithmIterations = 100;
 
-function setPath() {
+function setPath(avg: number, partialAvg: number, curve: number[]) {
   var d = `M0 ${graphHeight}`;
   for (let i = 0; i < algorithmIterations; i++) {
     if (curve.length == i) {
-      return;
+      break;
     }
     d = d.replace(`V ${graphHeight}`, "");
     d +=
@@ -241,16 +240,28 @@ function setPath() {
       " " +
       (graphHeight - curve[i] * graphHeight) +
       `V ${graphHeight}`;
+    if (isNaN(curve[i])) {
+      console.log(curve[i]);
+      return;
+    }
     (graph?.firstElementChild as HTMLElement).setAttribute("d", d);
   }
+  (graph?.children[2] as HTMLElement).setAttribute(
+    "d",
+    `M0 ${avg * graphHeight} H${graphWidth}`
+  );
+
+  (graph?.children[1] as HTMLElement).setAttribute(
+    "d",
+    `M0 ${partialAvg * graphHeight} H${graphWidth}`
+  );
 }
 
 async function setOptimizedResult(main: string, sub: string) {
-  curve = [];
   if (runAlgorithm != null) {
     window.clearTimeout(runningAlgorithm!);
   }
-  runAlgorithm(countDynamicPrograming, 0, main, sub, 0, 0);
+  runAlgorithm(countDynamicPrograming, 0, main, sub, 0, 0, 0, 0, []);
 }
 
 let runningAlgorithm: null | number = null;
@@ -261,22 +272,24 @@ function runAlgorithm(
   main: string,
   sub: string,
   sum: number,
-  max: number
+  max: number,
+  partialSum: number,
+  partialCount: number,
+  curve: number[]
 ): void {
   if (i == algorithmIterations) {
     return;
   }
+  var result = 0;
+
   var start = performance.now();
-
-  (<HTMLElement>resultsOp[1]).innerText = `result: ${algorithm(
-    main,
-    sub
-  ).toString()}`;
-
+  result = algorithm(main, sub);
   var end = performance.now();
+
   let currentTime = end - start;
   sum += currentTime;
 
+  (<HTMLElement>resultsOp[1]).innerText = `result: ${result}`;
   (<HTMLElement>resultsOp[0]).innerText = `batch item: ${i.toString()}`;
   let time = (sum / (i + 1)).toString();
   (<HTMLElement>resultsOp[2]).innerText = `average timing: ${time.slice(
@@ -285,17 +298,43 @@ function runAlgorithm(
   )}ms`;
 
   let limit = 1.5;
+
+  if (currentTime < max * 1.6) {
+    partialSum += currentTime;
+    partialCount++;
+  }
+
   curve.push(currentTime / (max * limit));
+  if (isNaN(currentTime / (max * limit))) {
+    console.log("push NaN");
+    return runAlgorithm(algorithm, 0, main, sub, 0, 0, 0, 0, []);
+  }
   if (max < currentTime && (max == 0 || currentTime < max * 2)) {
     let rate = max == 0 ? 1 : max / (currentTime * limit);
     max = currentTime;
 
-    curve = curve.map((x) => x * rate);
+    for (let k = 0; k < curve.length; k++) {
+      curve[k] *= rate;
+    }
     curve[curve.length - 1] = 1 / limit;
   }
-  setPath();
+  setPath(
+    sum / (i + 1) / (max * limit),
+    partialSum / (partialCount + 1) / (max * 1.5),
+    curve
+  );
   runningAlgorithm = setTimeout(() => {
-    return runAlgorithm(algorithm, i + 1, main, sub, sum, max);
+    return runAlgorithm(
+      algorithm,
+      i + 1,
+      main,
+      sub,
+      sum,
+      max,
+      partialSum,
+      partialCount,
+      curve
+    );
   }, 1);
 }
 
