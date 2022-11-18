@@ -128,3 +128,16 @@ document.body.addEventListener("click", () => {
 
   (document.querySelector(".main") as HTMLElement).dataset.clicked = "false";
 });
+
+const graph = document.querySelector(".graph");
+const graphWidth = parseFloat(graph?.getAttribute("width")!);
+const graphHeight = parseFloat(graph?.getAttribute("height")!);
+
+async function showCurves() {
+  var d = `M0 ${graphHeight}`;
+  for (var i = 0; i <= 1; i += 0.01) {
+    await sleep(10);
+  }
+}
+
+showCurves();

@@ -1,7 +1,4 @@
 {
-    "cSpell.words": [
-        "mainstring",
-        "ocode",
-        "oletra"
-    ]
+  "cSpell.words": ["mainstring", "ocode", "oletra"],
+  "liveServer.settings.port": 5500
 }
