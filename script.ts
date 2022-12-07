@@ -227,41 +227,37 @@ async function sleep(ms: number, group?: string) {
 
 const algorithmIterations = 100;
 
-function setPath(avg: number, partialAvg: number, curve: number[]) {
+function setPath(avg: number, curve: number[], max: number) {
   var d = `M0 ${graphHeight}`;
+  avg /= max;
   for (let i = 0; i < algorithmIterations; i++) {
     if (curve.length == i) {
       break;
+    }
+    if (isNaN(curve[i] / max)) {
+      console.log("curve NaN");
+      return;
     }
     d = d.replace(`V ${graphHeight}`, "");
     d +=
       "L" +
       i * (graphWidth / algorithmIterations) +
       " " +
-      (graphHeight - curve[i] * graphHeight) +
+      (graphHeight - (curve[i] / max) * graphHeight) +
       `V ${graphHeight}`;
-    if (isNaN(curve[i])) {
-      console.log(curve[i]);
-      return;
-    }
     (graph?.firstElementChild as HTMLElement).setAttribute("d", d);
   }
   (graph?.children[2] as HTMLElement).setAttribute(
     "d",
-    `M0 ${avg * graphHeight} H${graphWidth}`
-  );
-
-  (graph?.children[1] as HTMLElement).setAttribute(
-    "d",
-    `M0 ${partialAvg * graphHeight} H${graphWidth}`
+    `M0 ${graphHeight - avg * graphHeight} H${graphWidth}`
   );
 }
 
-async function setOptimizedResult(main: string, sub: string) {
+function setOptimizedResult(main: string, sub: string) {
   if (runAlgorithm != null) {
     window.clearTimeout(runningAlgorithm!);
   }
-  runAlgorithm(countDynamicPrograming, 0, main, sub, 0, 0, 0, 0, []);
+  runAlgorithm(count, 0, main, sub, 0, 0, 0, []);
 }
 
 let runningAlgorithm: null | number = null;
@@ -273,8 +269,7 @@ function runAlgorithm(
   sub: string,
   sum: number,
   max: number,
-  partialSum: number,
-  partialCount: number,
+  actualMax: number,
   curve: number[]
 ): void {
   if (i == algorithmIterations) {
@@ -283,46 +278,37 @@ function runAlgorithm(
   var result = 0;
 
   var start = performance.now();
-  result = algorithm(main, sub);
+  result = algorithm(main, sub, main.length, sub.length);
   var end = performance.now();
 
-  let currentTime = end - start;
+  let currentTime = (end - start) * 100;
   sum += currentTime;
 
   (<HTMLElement>resultsOp[1]).innerText = `result: ${result}`;
   (<HTMLElement>resultsOp[0]).innerText = `batch item: ${i.toString()}`;
-  let time = (sum / (i + 1)).toString();
+  let time = (sum / 100 / (i + 1)).toString();
   (<HTMLElement>resultsOp[2]).innerText = `average timing: ${time.slice(
     0,
     time.indexOf(".") + 5
   )}ms`;
 
-  let limit = 1.5;
+  let limit = 2;
 
-  if (currentTime < max * 1.6) {
-    partialSum += currentTime;
-    partialCount++;
-  }
+  curve.push(currentTime);
 
-  curve.push(currentTime / (max * limit));
-  if (isNaN(currentTime / (max * limit))) {
-    console.log("push NaN");
-    return runAlgorithm(algorithm, 0, main, sub, 0, 0, 0, 0, []);
-  }
-  if (max < currentTime && (max == 0 || currentTime < max * 2)) {
-    let rate = max == 0 ? 1 : max / (currentTime * limit);
+  if (max < currentTime && (max == 0 || currentTime < max * limit)) {
     max = currentTime;
-
-    for (let k = 0; k < curve.length; k++) {
-      curve[k] *= rate;
-    }
-    curve[curve.length - 1] = 1 / limit;
   }
-  setPath(
-    sum / (i + 1) / (max * limit),
-    partialSum / (partialCount + 1) / (max * 1.5),
-    curve
+  if (actualMax < currentTime) {
+    actualMax = currentTime;
+  }
+  (graph?.children[1] as HTMLElement).setAttribute(
+    "d",
+    `M0 ${
+      graphHeight - (actualMax / (max * limit)) * graphHeight
+    } H${graphWidth}`
   );
+  setPath(sum / (i + 1), curve, max * limit);
   runningAlgorithm = setTimeout(() => {
     return runAlgorithm(
       algorithm,
@@ -331,8 +317,7 @@ function runAlgorithm(
       sub,
       sum,
       max,
-      partialSum,
-      partialCount,
+      actualMax,
       curve
     );
   }, 1);

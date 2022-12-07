@@ -213,72 +213,61 @@ function sleep(ms, group) {
     });
 }
 const algorithmIterations = 100;
-function setPath(avg, partialAvg, curve) {
+function setPath(avg, curve, max) {
     var d = `M0 ${graphHeight}`;
+    avg /= max;
     for (let i = 0; i < algorithmIterations; i++) {
         if (curve.length == i) {
             break;
+        }
+        if (isNaN(curve[i] / max)) {
+            console.log("curve NaN");
+            return;
         }
         d = d.replace(`V ${graphHeight}`, "");
         d +=
             "L" +
                 i * (graphWidth / algorithmIterations) +
                 " " +
-                (graphHeight - curve[i] * graphHeight) +
+                (graphHeight - (curve[i] / max) * graphHeight) +
                 `V ${graphHeight}`;
-        if (isNaN(curve[i])) {
-            console.log(curve[i]);
-            return;
-        }
         (graph === null || graph === void 0 ? void 0 : graph.firstElementChild).setAttribute("d", d);
     }
-    (graph === null || graph === void 0 ? void 0 : graph.children[2]).setAttribute("d", `M0 ${avg * graphHeight} H${graphWidth}`);
-    (graph === null || graph === void 0 ? void 0 : graph.children[1]).setAttribute("d", `M0 ${partialAvg * graphHeight} H${graphWidth}`);
+    (graph === null || graph === void 0 ? void 0 : graph.children[2]).setAttribute("d", `M0 ${graphHeight - avg * graphHeight} H${graphWidth}`);
 }
 function setOptimizedResult(main, sub) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (runAlgorithm != null) {
-            window.clearTimeout(runningAlgorithm);
-        }
-        runAlgorithm(countDynamicPrograming, 0, main, sub, 0, 0, 0, 0, []);
-    });
+    if (runAlgorithm != null) {
+        window.clearTimeout(runningAlgorithm);
+    }
+    runAlgorithm(count, 0, main, sub, 0, 0, 0, []);
 }
 let runningAlgorithm = null;
-function runAlgorithm(algorithm, i, main, sub, sum, max, partialSum, partialCount, curve) {
+function runAlgorithm(algorithm, i, main, sub, sum, max, actualMax, curve) {
     if (i == algorithmIterations) {
         return;
     }
     var result = 0;
     var start = performance.now();
-    result = algorithm(main, sub);
+    result = algorithm(main, sub, main.length, sub.length);
     var end = performance.now();
-    let currentTime = end - start;
+    let currentTime = (end - start) * 100;
     sum += currentTime;
     resultsOp[1].innerText = `result: ${result}`;
     resultsOp[0].innerText = `batch item: ${i.toString()}`;
-    let time = (sum / (i + 1)).toString();
+    let time = (sum / 100 / (i + 1)).toString();
     resultsOp[2].innerText = `average timing: ${time.slice(0, time.indexOf(".") + 5)}ms`;
-    let limit = 1.5;
-    if (currentTime < max * 1.6) {
-        partialSum += currentTime;
-        partialCount++;
-    }
-    curve.push(currentTime / (max * limit));
-    if (isNaN(currentTime / (max * limit))) {
-        console.log("push NaN");
-        return runAlgorithm(algorithm, 0, main, sub, 0, 0, 0, 0, []);
-    }
-    if (max < currentTime && (max == 0 || currentTime < max * 2)) {
-        let rate = max == 0 ? 1 : max / (currentTime * limit);
+    let limit = 2;
+    curve.push(currentTime);
+    if (max < currentTime && (max == 0 || currentTime < max * limit)) {
         max = currentTime;
-        for (let k = 0; k < curve.length; k++) {
-            curve[k] *= rate;
-        }
-        curve[curve.length - 1] = 1 / limit;
     }
-    setPath(sum / (i + 1) / (max * limit), partialSum / (partialCount + 1) / (max * 1.5), curve);
+    if (actualMax < currentTime) {
+        actualMax = currentTime;
+    }
+    (graph === null || graph === void 0 ? void 0 : graph.children[1]).setAttribute("d", `M0 ${graphHeight - (actualMax / (max * limit)) * graphHeight} H${graphWidth}`);
+    setPath(sum / (i + 1), curve, max * limit);
     runningAlgorithm = setTimeout(() => {
-        return runAlgorithm(algorithm, i + 1, main, sub, sum, max, partialSum, partialCount, curve);
+        return runAlgorithm(algorithm, i + 1, main, sub, sum, max, actualMax, curve);
     }, 1);
 }
 function setOldResult(main, sub) {
